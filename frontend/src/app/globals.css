@@ -3,6 +3,22 @@
 @import "tw-animate-css";
 @custom-variant dark (&:is(.dark *));
 
+/* Hide Clerk development mode */
+[data-localization-key*="footer"],
+[data-localization-key*="development"],
+[data-localization-key*="mode"],
+.cl-footer,
+.cl-footerText,
+.cl-footerAction,
+.cl-footerActionText,
+.cl-footerActionLink {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
 @theme {
     --color-background: #000000;
     --color-foreground: #ffffff;

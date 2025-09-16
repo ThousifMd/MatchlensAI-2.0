@@ -113,7 +113,7 @@ export default function RootLayout({
         </noscript>
         {/* End Meta Pixel Code */}
 
-        {/* Fix hydration issues with browser extensions */}
+        {/* Fix hydration issues with browser extensions and hide Clerk development mode */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -127,6 +127,31 @@ export default function RootLayout({
                     body.removeAttribute('data-new-gr-c-s-check-loaded');
                     body.removeAttribute('data-gr-ext-installed');
                   }
+                  
+                  // Hide Clerk development mode
+                  function hideDevelopmentMode() {
+                    const elements = document.querySelectorAll('*');
+                    elements.forEach(element => {
+                      if (element.textContent && element.textContent.includes('Development mode')) {
+                        element.style.display = 'none';
+                        element.style.visibility = 'hidden';
+                        element.style.opacity = '0';
+                        element.style.height = '0';
+                        element.style.overflow = 'hidden';
+                      }
+                    });
+                  }
+                  
+                  // Run immediately and on mutations
+                  hideDevelopmentMode();
+                  
+                  // Watch for dynamic content changes
+                  const observer = new MutationObserver(hideDevelopmentMode);
+                  observer.observe(document.body, {
+                    childList: true,
+                    subtree: true,
+                    characterData: true
+                  });
                 });
               }
             `,
@@ -222,16 +247,21 @@ export default function RootLayout({
               userButtonPopoverFooterText: 'text-gray-400',
               userButtonPopoverFooterLink: 'text-[#FFD700] hover:text-[#FFA500]',
               
-              // Hide development mode
-              footer: 'hidden',
-              footerText: 'hidden',
-              footerAction: 'hidden',
-              footerActionText: 'hidden',
-              footerActionLink: 'hidden',
-              footerActionText__signIn: 'hidden',
-              footerActionText__signUp: 'hidden',
-              footerActionLink__signIn: 'hidden',
-              footerActionLink__signUp: 'hidden',
+              // Hide development mode and footer elements
+              footer: 'hidden !important',
+              footerText: 'hidden !important',
+              footerAction: 'hidden !important',
+              footerActionText: 'hidden !important',
+              footerActionLink: 'hidden !important',
+              footerActionText__signIn: 'hidden !important',
+              footerActionText__signUp: 'hidden !important',
+              footerActionLink__signIn: 'hidden !important',
+              footerActionLink__signUp: 'hidden !important',
+              // Additional elements to hide development mode
+              'footer[data-localization-key]': 'display: none !important',
+              'div[data-localization-key*="footer"]': 'display: none !important',
+              'span[data-localization-key*="footer"]': 'display: none !important',
+              'p[data-localization-key*="footer"]': 'display: none !important',
             }
           }}
         >
