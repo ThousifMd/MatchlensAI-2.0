@@ -111,7 +111,7 @@ export default function PricingPage() {
     };
 
     const handleContinueToCheckout = () => {
-        // Store selected package in localStorage
+        // Store selected package in localStorag
         localStorage.setItem('selectedPackage', selectedPackage);
         // Redirect to checkout first (payment before onboarding)
         router.push('/checkout');
