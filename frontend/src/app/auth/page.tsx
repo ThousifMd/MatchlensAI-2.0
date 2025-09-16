@@ -6,6 +6,12 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 
+// Check if Clerk is configured
+const isClerkConfigured = () => {
+  return process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && 
+         process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY !== 'pk_test_placeholder';
+};
+
 export default function AuthPage() {
     const { isSignedIn, isLoaded } = useUser();
     const router = useRouter();
@@ -18,19 +24,53 @@ export default function AuthPage() {
     }
   }, [isLoaded, isSignedIn, router]);
 
-    // Show loading while Clerk is initializing
-    if (!isLoaded) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 flex items-center justify-center">
-                <div className="text-white text-xl">Loading...</div>
+  // If Clerk is not configured, show setup message
+  if (!isClerkConfigured()) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
+        <div className="container mx-auto px-4 py-6">
+          <Button
+            variant="ghost"
+            onClick={() => router.push('/')}
+            className="text-white hover:text-white flex items-center gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Home
+          </Button>
+        </div>
+        <div className="container mx-auto px-4 py-12">
+          <div className="max-w-md mx-auto text-center">
+            <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-6">
+              <h1 className="text-2xl font-bold text-yellow-400 mb-4">Setup Required</h1>
+              <p className="text-yellow-300 mb-4">
+                Clerk authentication is not configured yet. Please set up your Clerk account and add the environment variables.
+              </p>
+              <Button
+                onClick={() => router.push('/checkout')}
+                className="bg-[#d4ae36] hover:bg-[#c19d2f] text-black font-semibold"
+              >
+                Continue to Checkout (Skip Auth)
+              </Button>
             </div>
-        );
-    }
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-    // If user is already signed in, redirect (this will be handled by useEffect)
-    if (isSignedIn) {
-        return null;
-    }
+  // Show loading while Clerk is initializing
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  // If user is already signed in, redirect (this will be handled by useEffect)
+  if (isSignedIn) {
+    return null;
+  }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
