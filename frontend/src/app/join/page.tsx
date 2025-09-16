@@ -15,7 +15,7 @@ import Footer from "@/components/Footer";
 import { MobileStickyCTA } from "@/components/MobileStickyCTA";
 
 export default function JoinPage() {
-    const ctaHref = "/onboarding";
+    const ctaHref = "/pricing";
 
     return (
         <div className="min-h-screen bg-black text-white relative overflow-hidden">

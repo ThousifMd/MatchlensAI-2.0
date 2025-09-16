@@ -134,9 +134,9 @@ export default function PricingPage() {
             >
                 <div className="flex items-center space-x-4">
                     <Button asChild variant="ghost" size="sm" className="text-white hover:text-white hover:bg-white/20 transition-all duration-200">
-                        <Link href="/onboarding">
+                        <Link href="/">
                             <ArrowLeft className="w-4 h-4 mr-2" />
-                            Back to Questionnaire
+                            Back to Home
                         </Link>
                     </Button>
                     <h1 className="text-xl font-semibold text-white">Choose Your Package</h1>
