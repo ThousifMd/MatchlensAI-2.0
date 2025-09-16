@@ -208,7 +208,7 @@ export const PricingSection = () => {
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          window.location.href = "/onboarding";
+                          handleGetStarted(tier.id);
                         }}
                         className="relative w-full h-auto min-h-[48px] px-8 py-3 rounded-lg font-semibold text-lg bg-white/5 backdrop-blur-md border border-white/20 hover:bg-white/10 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#FFD700]/20 overflow-hidden group mt-auto flex items-center justify-center"
                         aria-label="Make my profile irresistible"

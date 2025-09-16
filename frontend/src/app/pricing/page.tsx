@@ -240,6 +240,8 @@ export default function PricingPage() {
                                             }`}
                                         onClick={(e) => {
                                             e.stopPropagation();
+                                            // Store selected package and go to checkout
+                                            localStorage.setItem('selectedPackage', pkg.id);
                                             router.push('/checkout');
                                         }}
                                     >
