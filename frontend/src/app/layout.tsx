@@ -158,19 +158,55 @@ export default function RootLayout({
               colorInputText: '#ffffff',
               colorText: '#ffffff',
               colorTextSecondary: '#9ca3af',
+              colorNeutral: '#374151',
+              colorSuccess: '#10b981',
+              colorWarning: '#f59e0b',
+              colorDanger: '#ef4444',
+              colorAlphaShade: '#ffffff',
+              colorShimmer: '#374151',
               borderRadius: '0.5rem',
+              fontFamily: 'inherit',
+              fontSize: '14px',
+              fontWeight: {
+                normal: 400,
+                medium: 500,
+                semibold: 600,
+                bold: 700,
+              },
+              spacingUnit: '1rem',
+              animationDuration: '200ms',
             },
             elements: {
-              formButtonPrimary: 'bg-[#FFD700] hover:bg-[#FFA500] text-black font-semibold',
-              card: 'bg-gray-900 border border-[#FFD700]/30',
-              headerTitle: 'text-white',
-              headerSubtitle: 'text-gray-400',
-              socialButtonsBlockButton: 'bg-gray-800 hover:bg-gray-700 text-white border-gray-700',
-              formFieldInput: 'bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-[#FFD700]',
-              formFieldLabel: 'text-white',
-              footerActionLink: 'text-[#FFD700] hover:text-[#FFA500]',
+              // Modal styling
+              modalContent: 'bg-gray-900 border border-[#FFD700]/30 shadow-2xl',
+              modalHeaderTitle: 'text-white text-xl font-semibold',
+              modalHeaderSubtitle: 'text-gray-400 text-sm',
+              modalCloseButton: 'text-gray-400 hover:text-white',
+              
+              // Form styling
+              formButtonPrimary: 'bg-[#FFD700] hover:bg-[#FFA500] text-black font-semibold border-0 shadow-lg',
+              formFieldInput: 'bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-[#FFD700] focus:ring-[#FFD700]/20',
+              formFieldLabel: 'text-white text-sm font-medium',
+              formFieldSuccessText: 'text-green-400',
+              formFieldErrorText: 'text-red-400',
+              formFieldWarningText: 'text-yellow-400',
+              
+              // Social buttons
+              socialButtonsBlockButton: 'bg-gray-800 hover:bg-gray-700 text-white border-gray-700 hover:border-[#FFD700]/50',
+              socialButtonsBlockButtonText: 'text-white',
+              socialButtonsBlockButtonArrow: 'text-[#FFD700]',
+              
+              // Links and text
+              footerActionLink: 'text-[#FFD700] hover:text-[#FFA500] font-medium',
               identityPreviewText: 'text-gray-400',
               formResendCodeLink: 'text-[#FFD700] hover:text-[#FFA500]',
+              
+              // Card styling
+              card: 'bg-gray-900 border border-[#FFD700]/30 shadow-2xl',
+              headerTitle: 'text-white',
+              headerSubtitle: 'text-gray-400',
+              
+              // User button dropdown
               userButtonPopoverCard: 'bg-gray-900 border border-[#FFD700]/30 shadow-2xl',
               userButtonPopoverActionButton: 'text-white hover:bg-[#FFD700]/10 hover:text-[#FFD700] transition-colors',
               userButtonPopoverMain: 'bg-gray-900',
@@ -185,9 +221,17 @@ export default function RootLayout({
               userButtonPopoverFooter: 'bg-gray-800 border-t border-[#FFD700]/20',
               userButtonPopoverFooterText: 'text-gray-400',
               userButtonPopoverFooterLink: 'text-[#FFD700] hover:text-[#FFA500]',
-              modalContent: 'bg-gray-900 border border-[#FFD700]/30',
-              modalHeaderTitle: 'text-white',
-              modalHeaderSubtitle: 'text-gray-400',
+              
+              // Hide development mode
+              footer: 'hidden',
+              footerText: 'hidden',
+              footerAction: 'hidden',
+              footerActionText: 'hidden',
+              footerActionLink: 'hidden',
+              footerActionText__signIn: 'hidden',
+              footerActionText__signUp: 'hidden',
+              footerActionLink__signIn: 'hidden',
+              footerActionLink__signUp: 'hidden',
             }
           }}
         >
