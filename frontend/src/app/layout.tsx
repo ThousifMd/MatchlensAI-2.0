@@ -149,6 +149,47 @@ export default function RootLayout({
         />
         <ClerkProvider
           publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_test_placeholder'}
+          appearance={{
+            baseTheme: undefined,
+            variables: {
+              colorPrimary: '#FFD700',
+              colorBackground: '#111827',
+              colorInputBackground: '#1f2937',
+              colorInputText: '#ffffff',
+              colorText: '#ffffff',
+              colorTextSecondary: '#9ca3af',
+              borderRadius: '0.5rem',
+            },
+            elements: {
+              formButtonPrimary: 'bg-[#FFD700] hover:bg-[#FFA500] text-black font-semibold',
+              card: 'bg-gray-900 border border-[#FFD700]/30',
+              headerTitle: 'text-white',
+              headerSubtitle: 'text-gray-400',
+              socialButtonsBlockButton: 'bg-gray-800 hover:bg-gray-700 text-white border-gray-700',
+              formFieldInput: 'bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-[#FFD700]',
+              formFieldLabel: 'text-white',
+              footerActionLink: 'text-[#FFD700] hover:text-[#FFA500]',
+              identityPreviewText: 'text-gray-400',
+              formResendCodeLink: 'text-[#FFD700] hover:text-[#FFA500]',
+              userButtonPopoverCard: 'bg-gray-900 border border-[#FFD700]/30 shadow-2xl',
+              userButtonPopoverActionButton: 'text-white hover:bg-[#FFD700]/10 hover:text-[#FFD700] transition-colors',
+              userButtonPopoverMain: 'bg-gray-900',
+              userButtonPopoverActionButtonText: 'text-white',
+              userButtonPopoverActionButtonIcon: 'text-[#FFD700]',
+              userButtonPopoverHeaderTitle: 'text-white',
+              userButtonPopoverHeaderSubtitle: 'text-gray-400',
+              userButtonPopoverActionButtonText__manageAccount: 'text-white hover:text-[#FFD700]',
+              userButtonPopoverActionButtonText__signOut: 'text-red-400 hover:text-red-300',
+              userButtonPopoverActionButtonIcon__manageAccount: 'text-[#FFD700]',
+              userButtonPopoverActionButtonIcon__signOut: 'text-red-400',
+              userButtonPopoverFooter: 'bg-gray-800 border-t border-[#FFD700]/20',
+              userButtonPopoverFooterText: 'text-gray-400',
+              userButtonPopoverFooterLink: 'text-[#FFD700] hover:text-[#FFA500]',
+              modalContent: 'bg-gray-900 border border-[#FFD700]/30',
+              modalHeaderTitle: 'text-white',
+              modalHeaderSubtitle: 'text-gray-400',
+            }
+          }}
         >
           <PackageProvider>
             {children}

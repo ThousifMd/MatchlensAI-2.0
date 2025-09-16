@@ -72,59 +72,12 @@ export default function Navbar({ ctaHref, className }: NavbarProps) {
               <>
                 {/* Sign In/Sign Up buttons for non-authenticated users */}
                 <SignedOut>
-                  <SignInButton 
-                    mode="modal"
-                    appearance={{
-                      elements: {
-                        modalContent: "bg-gray-900 border border-[#FFD700]/30",
-                        modalHeaderTitle: "text-white",
-                        modalHeaderSubtitle: "text-gray-400",
-                        formButtonPrimary: "bg-[#FFD700] hover:bg-[#FFA500] text-black font-semibold",
-                        formFieldInput: "bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-[#FFD700]",
-                        formFieldLabel: "text-white",
-                        socialButtonsBlockButton: "bg-gray-800 hover:bg-gray-700 text-white border-gray-700",
-                        footerActionLink: "text-[#FFD700] hover:text-[#FFA500]",
-                        identityPreviewText: "text-gray-400",
-                        formResendCodeLink: "text-[#FFD700] hover:text-[#FFA500]",
-                        formFieldInputShowPasswordButton: "text-[#FFD700] hover:text-[#FFA500]",
-                        formFieldInputShowPasswordIcon: "text-[#FFD700]",
-                        formFieldSuccessText: "text-green-400",
-                        formFieldErrorText: "text-red-400",
-                        formFieldWarningText: "text-yellow-400",
-                        formFieldInputShowPasswordButtonIcon: "text-[#FFD700]",
-                        formFieldInputShowPasswordButtonIcon__show: "text-[#FFD700]",
-                        formFieldInputShowPasswordButtonIcon__hide: "text-[#FFD700]",
-                        formFieldInputShowPasswordButton__show: "text-[#FFD700] hover:text-[#FFA500]",
-                        formFieldInputShowPasswordButton__hide: "text-[#FFD700] hover:text-[#FFA500]"
-                      }
-                    }}
-                  >
+                  <SignInButton mode="modal">
                     <button className="px-4 py-2 text-white hover:text-[#FFD700] transition-colors text-sm font-medium">
                       Sign In
                     </button>
                   </SignInButton>
-                  <SignUpButton 
-                    mode="modal"
-                    appearance={{
-                      elements: {
-                        modalContent: "bg-gray-900 border border-[#FFD700]/30",
-                        modalHeaderTitle: "text-white",
-                        modalHeaderSubtitle: "text-gray-400",
-                        formButtonPrimary: "bg-[#FFD700] hover:bg-[#FFA500] text-black font-semibold",
-                        formFieldInput: "bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-[#FFD700]",
-                        formFieldLabel: "text-white",
-                        socialButtonsBlockButton: "bg-gray-800 hover:bg-gray-700 text-white border-gray-700",
-                        footerActionLink: "text-[#FFD700] hover:text-[#FFA500]",
-                        identityPreviewText: "text-gray-400",
-                        formResendCodeLink: "text-[#FFD700] hover:text-[#FFA500]",
-                        formFieldInputShowPasswordButton: "text-[#FFD700] hover:text-[#FFA500]",
-                        formFieldInputShowPasswordIcon: "text-[#FFD700]",
-                        formFieldSuccessText: "text-green-400",
-                        formFieldErrorText: "text-red-400",
-                        formFieldWarningText: "text-yellow-400"
-                      }
-                    }}
-                  >
+                  <SignUpButton mode="modal">
                     <button className="px-4 py-2 bg-[#FFD700] hover:bg-[#FFA500] text-black rounded-lg font-medium text-sm transition-all duration-300">
                       Sign Up
                     </button>
@@ -136,25 +89,7 @@ export default function Navbar({ ctaHref, className }: NavbarProps) {
                   <UserButton 
                     appearance={{
                       elements: {
-                        avatarBox: "w-8 h-8",
-                        userButtonPopoverCard: "bg-gray-900 border border-[#FFD700]/30 shadow-2xl",
-                        userButtonPopoverActionButton: "text-white hover:bg-[#FFD700]/10 hover:text-[#FFD700] transition-colors",
-                        userButtonPopoverMain: "bg-gray-900",
-                        userButtonPopoverActionButtonText: "text-white",
-                        userButtonPopoverActionButtonIcon: "text-[#FFD700]",
-                        userButtonPopoverHeaderTitle: "text-white",
-                        userButtonPopoverHeaderSubtitle: "text-gray-400",
-                        userButtonPopoverHeaderBackIcon: "text-[#FFD700]",
-                        userButtonPopoverHeaderBackButton: "hover:bg-[#FFD700]/10",
-                        userButtonPopoverCardBox: "bg-gray-900",
-                        userButtonPopoverActionButtonArrow: "text-[#FFD700]",
-                        userButtonPopoverActionButtonText__manageAccount: "text-white hover:text-[#FFD700]",
-                        userButtonPopoverActionButtonText__signOut: "text-red-400 hover:text-red-300",
-                        userButtonPopoverActionButtonIcon__manageAccount: "text-[#FFD700]",
-                        userButtonPopoverActionButtonIcon__signOut: "text-red-400",
-                        userButtonPopoverFooter: "bg-gray-800 border-t border-[#FFD700]/20",
-                        userButtonPopoverFooterText: "text-gray-400",
-                        userButtonPopoverFooterLink: "text-[#FFD700] hover:text-[#FFA500]"
+                        avatarBox: "w-8 h-8"
                       }
                     }}
                   />
