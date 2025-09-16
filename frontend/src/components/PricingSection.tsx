@@ -89,8 +89,8 @@ export const PricingSection = () => {
       setSelectedPackage(packageData);
       // Store selected package in localStorage for payment page
       localStorage.setItem('selectedPackage', packageId);
-      // Route to authentication first (sign in before payment)
-      window.location.href = `/auth`;
+      // Route to checkout directly (auth will be handled by navbar)
+      window.location.href = `/checkout`;
     }
   };
 
