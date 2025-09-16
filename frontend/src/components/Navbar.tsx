@@ -72,20 +72,12 @@ export default function Navbar({ ctaHref, className }: NavbarProps) {
               <>
                 {/* Sign In/Sign Up buttons for non-authenticated users */}
                 <SignedOut>
-                  <SignInButton 
-                    mode="modal"
-                    afterSignInUrl="/checkout"
-                    afterSignUpUrl="/checkout"
-                  >
+                  <SignInButton mode="modal">
                     <button className="px-4 py-2 text-white hover:text-[#FFD700] transition-colors text-sm font-medium">
                       Sign In
                     </button>
                   </SignInButton>
-                  <SignUpButton 
-                    mode="modal"
-                    afterSignInUrl="/checkout"
-                    afterSignUpUrl="/checkout"
-                  >
+                  <SignUpButton mode="modal">
                     <button className="px-4 py-2 bg-[#FFD700] hover:bg-[#FFA500] text-black rounded-lg font-medium text-sm transition-all duration-300">
                       Sign Up
                     </button>

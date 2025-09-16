@@ -124,7 +124,6 @@ export default function AuthPage() {
                                         formResendCodeLink: 'text-[#d4ae36] hover:text-[#c19d2f]',
                                     }
                                 }}
-                afterSignUpUrl="/checkout"
                 redirectUrl="/checkout"
                             />
                         ) : (
@@ -143,7 +142,6 @@ export default function AuthPage() {
                                         formResendCodeLink: 'text-[#d4ae36] hover:text-[#c19d2f]',
                                     }
                                 }}
-                afterSignInUrl="/checkout"
                 redirectUrl="/checkout"
                             />
                         )}
