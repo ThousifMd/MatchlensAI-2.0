@@ -113,8 +113,8 @@ export default function PricingPage() {
     const handleContinueToCheckout = () => {
         // Store selected package in localStorag
         localStorage.setItem('selectedPackage', selectedPackage);
-        // Redirect to checkout first (payment before onboarding)
-        router.push('/checkout');
+        // Redirect to authentication first (sign in before payment)
+        router.push('/auth');
     };
 
     return (
@@ -240,9 +240,9 @@ export default function PricingPage() {
                                             }`}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            // Store selected package and go to checkout
+                                            // Store selected package and go to auth
                                             localStorage.setItem('selectedPackage', pkg.id);
-                                            router.push('/checkout');
+                                            router.push('/auth');
                                         }}
                                     >
                                         Make me a match magnet

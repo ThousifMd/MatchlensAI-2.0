@@ -4,6 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import { Sparkles } from "lucide-react"
 import { trackCTAClick } from "@/lib/metaPixel"
+import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 
 type NavbarProps = {
   ctaHref: string
@@ -59,18 +60,51 @@ export default function Navbar({ ctaHref, className }: NavbarProps) {
             ))}
           </nav>
 
-          {/* CTA Button */}
-          <button
-            className="hidden md:inline-flex items-center px-5 py-2 bg-transparent backdrop-blur-sm border border-[#FFD700]/40 rounded-lg font-medium hover:border-[#FFD700]/60 hover:bg-transparent transition-all duration-300"
-            onClick={() => {
-              trackCTAClick("Join the Top 5%", "Navbar Desktop");
-              document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-          >
-            <span className="bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FFD700] bg-clip-text text-transparent">
-              Join the Top 5%
-            </span>
-          </button>
+          {/* Authentication & CTA */}
+          <div className="hidden md:flex items-center gap-3">
+            {/* Sign In/Sign Up buttons for non-authenticated users */}
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="px-4 py-2 text-white hover:text-[#FFD700] transition-colors text-sm font-medium">
+                  Sign In
+                </button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <button className="px-4 py-2 bg-[#FFD700] hover:bg-[#FFA500] text-black rounded-lg font-medium text-sm transition-all duration-300">
+                  Sign Up
+                </button>
+              </SignUpButton>
+            </SignedOut>
+
+            {/* User button for authenticated users */}
+            <SignedIn>
+              <UserButton 
+                appearance={{
+                  elements: {
+                    avatarBox: "w-8 h-8",
+                    userButtonPopoverCard: "bg-gray-900 border border-white/20",
+                    userButtonPopoverActionButton: "text-white hover:bg-white/10",
+                    userButtonPopoverFooter: "hidden"
+                  }
+                }}
+              />
+            </SignedIn>
+
+            {/* CTA Button - only show for authenticated users */}
+            <SignedIn>
+              <button
+                className="inline-flex items-center px-5 py-2 bg-transparent backdrop-blur-sm border border-[#FFD700]/40 rounded-lg font-medium hover:border-[#FFD700]/60 hover:bg-transparent transition-all duration-300"
+                onClick={() => {
+                  trackCTAClick("Join the Top 5%", "Navbar Desktop");
+                  document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                <span className="bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FFD700] bg-clip-text text-transparent">
+                  Join the Top 5%
+                </span>
+              </button>
+            </SignedIn>
+          </div>
         </div>
       </div>
     </header>

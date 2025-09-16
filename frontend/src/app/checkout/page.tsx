@@ -369,7 +369,7 @@ function CheckoutContent() {
     // Hide success popup after 3 seconds
     setTimeout(() => setShowSuccessPopup(false), 3000);
 
-    // Redirect to onboarding questionnaire after a short delay
+    // Redirect to onboarding page after a short delay
     setTimeout(() => {
       router.push('/onboarding');
     }, 2000);
