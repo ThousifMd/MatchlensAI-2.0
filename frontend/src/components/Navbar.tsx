@@ -139,7 +139,6 @@ export default function Navbar({ ctaHref, className }: NavbarProps) {
                         avatarBox: "w-8 h-8",
                         userButtonPopoverCard: "bg-gray-900 border border-[#FFD700]/30 shadow-2xl",
                         userButtonPopoverActionButton: "text-white hover:bg-[#FFD700]/10 hover:text-[#FFD700] transition-colors",
-                        userButtonPopoverFooter: "hidden",
                         userButtonPopoverMain: "bg-gray-900",
                         userButtonPopoverActionButtonText: "text-white",
                         userButtonPopoverActionButtonIcon: "text-[#FFD700]",
