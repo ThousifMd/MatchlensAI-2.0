@@ -82,6 +82,7 @@ Copy and paste this SQL:
 -- Create onboarding table
 CREATE TABLE onboarding (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  payment_id TEXT NOT NULL,
   name TEXT NOT NULL,
   age TEXT NOT NULL,
   dating_goal TEXT NOT NULL,
@@ -113,7 +114,7 @@ Copy and paste this SQL:
 -- Create images table
 CREATE TABLE images (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  onboarding_id UUID NOT NULL REFERENCES onboarding(id) ON DELETE CASCADE,
+  payment_id TEXT NOT NULL,
   file_name TEXT NOT NULL,
   file_path TEXT NOT NULL,
   file_size INTEGER NOT NULL,
@@ -123,7 +124,7 @@ CREATE TABLE images (
 );
 
 -- Create index for faster queries
-CREATE INDEX idx_images_onboarding_id ON images(onboarding_id);
+CREATE INDEX idx_images_payment_id ON images(payment_id);
 CREATE INDEX idx_images_type ON images(image_type);
 ```
 

@@ -39,9 +39,9 @@ export default function AuthPage() {
                 {/* Clerk Components */}
                 <div className="bg-[#1a1a1a] border border-[#374151] rounded-xl p-6 shadow-2xl">
                     {isSignUp ? (
-                        <SignUp afterSignUpUrl="/onboarding" />
+                        <SignUp />
                     ) : (
-                        <SignIn afterSignInUrl="/onboarding" />
+                        <SignIn />
                     )}
                 </div>
 

@@ -13,7 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, User, Users, Dumbbell, Plane, UtensilsCrossed, Camera, Music, BookOpen, Gamepad2, Heart, Coffee, Mountain, Upload, X, Check, Smartphone, FileText, TrendingUp, Mail, Phone, Clock } from "lucide-react";
 import { trackInitiateCheckout, trackCompleteRegistration, trackFormStep } from "@/lib/metaPixel";
 import { completeOnboardingFlow } from "@/lib/supabaseUtils";
-import { UserButton } from '@clerk/nextjs';
+// import { UserButton } from '@clerk/nextjs'; // Temporarily disabled to debug white screen
 
 interface OnboardingData {
   name: string;
@@ -176,8 +176,16 @@ function OnboardingContent() {
 
   // Check for payment verification and clear any stored form data on page load
   useEffect(() => {
-    // Allow access to onboarding after authentication
-    // Payment will be handled later in the flow
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+
+    // Check if user has completed payment
+    const paymentId = localStorage.getItem('lastPaymentId');
+    if (!paymentId) {
+      console.log('No payment_id found, redirecting to pricing page');
+      router.push('/pricing');
+      return;
+    }
 
     // Check if we're coming from checkout (step=5 parameter)
     const stepParam = searchParams.get('step');
@@ -322,10 +330,12 @@ function OnboardingContent() {
       // Submit form data and images to Supabase
       try {
         // Get payment_id from localStorage (stored during payment)
-        const paymentId = localStorage.getItem('lastPaymentId');
+        const paymentId = typeof window !== 'undefined' ? localStorage.getItem('lastPaymentId') : null;
         if (!paymentId) {
           console.error('❌ No payment_id found in localStorage');
           alert('Payment information not found. Please complete payment first.');
+          // Redirect to pricing page to start the flow
+          router.push('/pricing');
           return;
         }
 
@@ -369,8 +379,10 @@ function OnboardingContent() {
         console.log("✅ Onboarding flow completed successfully with ID:", result.onboardingId);
 
         // Clear payment verification flag after successful submission
-        localStorage.removeItem('paymentCompleted');
-        localStorage.removeItem('lastPaymentId'); // Also clear the payment ID
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('paymentCompleted');
+          localStorage.removeItem('lastPaymentId'); // Also clear the payment ID
+        }
 
         // Redirect to success page after form completion
         router.push('/onboarding/success');
@@ -634,7 +646,8 @@ function OnboardingContent() {
               <span className="text-xs font-medium text-white whitespace-nowrap">
                 Step {currentStep} of {totalSteps}
               </span>
-              <UserButton
+              {/* UserButton temporarily disabled to debug white screen */}
+              {/* <UserButton 
                 appearance={{
                   elements: {
                     userButtonPopoverCard: 'bg-[#1a1a1a] border border-[#374151] shadow-2xl',
@@ -648,7 +661,7 @@ function OnboardingContent() {
                     userButtonPopoverFooterActionIcon: 'display: none !important',
                   }
                 }}
-              />
+              /> */}
               {currentStep === 4 && (
                 <Button
                   variant="ghost"

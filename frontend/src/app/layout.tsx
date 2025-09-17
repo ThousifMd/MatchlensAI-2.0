@@ -113,7 +113,7 @@ export default function RootLayout({
         </noscript>
         {/* End Meta Pixel Code */}
 
-        {/* Fix hydration issues with browser extensions and hide Clerk development mode */}
+        {/* Fix hydration issues with browser extensions */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -127,31 +127,6 @@ export default function RootLayout({
                     body.removeAttribute('data-new-gr-c-s-check-loaded');
                     body.removeAttribute('data-gr-ext-installed');
                   }
-                  
-                  // Hide Clerk development mode
-                  function hideDevelopmentMode() {
-                    const elements = document.querySelectorAll('*');
-                    elements.forEach(element => {
-                      if (element.textContent && element.textContent.includes('Development mode')) {
-                        element.style.display = 'none';
-                        element.style.visibility = 'hidden';
-                        element.style.opacity = '0';
-                        element.style.height = '0';
-                        element.style.overflow = 'hidden';
-                      }
-                    });
-                  }
-                  
-                  // Run immediately and on mutations
-                  hideDevelopmentMode();
-                  
-                  // Watch for dynamic content changes
-                  const observer = new MutationObserver(hideDevelopmentMode);
-                  observer.observe(document.body, {
-                    childList: true,
-                    subtree: true,
-                    characterData: true
-                  });
                 });
               }
             `,
@@ -174,8 +149,8 @@ export default function RootLayout({
         />
         <ClerkProvider
           publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_test_placeholder'}
-          afterSignInUrl="/onboarding"
-          afterSignUpUrl="/onboarding"
+          signInFallbackRedirectUrl="/checkout"
+          signUpFallbackRedirectUrl="/checkout"
           appearance={{
             baseTheme: undefined,
             variables: {
@@ -189,7 +164,6 @@ export default function RootLayout({
               colorSuccess: '#10b981',
               colorWarning: '#f59e0b',
               colorDanger: '#ef4444',
-              colorAlphaShade: '#ffffff',
               colorShimmer: '#374151',
               borderRadius: '0.5rem',
               fontFamily: 'inherit',
@@ -201,7 +175,6 @@ export default function RootLayout({
                 bold: 700,
               },
               spacingUnit: '1rem',
-              animationDuration: '200ms',
             },
             elements: {
               // Modal styling
@@ -245,39 +218,17 @@ export default function RootLayout({
               userButtonPopoverActionButtonText__signOut: 'text-red-400 hover:text-red-300',
               userButtonPopoverActionButtonIcon__manageAccount: 'text-[#FFD700]',
               userButtonPopoverActionButtonIcon__signOut: 'text-red-400',
-              userButtonPopoverFooter: 'bg-gray-800 border-t border-[#FFD700]/20',
-              userButtonPopoverFooterText: 'text-gray-400',
-              userButtonPopoverFooterLink: 'text-[#FFD700] hover:text-[#FFA500]',
-<<<<<<< HEAD
-              
               // Hide development mode and footer elements
-              footer: 'hidden !important',
-              footerText: 'hidden !important',
-              footerAction: 'hidden !important',
-              footerActionText: 'hidden !important',
-              footerActionLink: 'hidden !important',
-              footerActionText__signIn: 'hidden !important',
-              footerActionText__signUp: 'hidden !important',
-              footerActionLink__signIn: 'hidden !important',
-              footerActionLink__signUp: 'hidden !important',
-              // Additional elements to hide development mode
-              'footer[data-localization-key]': 'display: none !important',
-              'div[data-localization-key*="footer"]': 'display: none !important',
-              'span[data-localization-key*="footer"]': 'display: none !important',
+              footer: 'display: none !important',
+              footerText: 'display: none !important',
+              footerAction: 'display: none !important',
+              userButtonPopoverFooter: 'display: none !important',
+              userButtonPopoverFooterText: 'display: none !important',
+              userButtonPopoverFooterAction: 'display: none !important',
+              userButtonPopoverFooterActionLink: 'display: none !important',
+              userButtonPopoverFooterActionText: 'display: none !important',
+              userButtonPopoverFooterActionIcon: 'display: none !important',
               'p[data-localization-key*="footer"]': 'display: none !important',
-=======
-
-              // Hide development mode
-              footer: 'hidden',
-              footerText: 'hidden',
-              footerAction: 'hidden',
-              footerActionText: 'hidden',
-              footerActionLink: 'hidden',
-              footerActionText__signIn: 'hidden',
-              footerActionText__signUp: 'hidden',
-              footerActionLink__signIn: 'hidden',
-              footerActionLink__signUp: 'hidden',
->>>>>>> 63e462b (Almost the flow is fixedgit add .)
             }
           }}
         >

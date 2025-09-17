@@ -75,11 +75,6 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
                     {isSignUp ? (
                         <SignUp
                             routing="hash"
-                            afterSignUpUrl="/onboarding"
-                            onSuccess={() => {
-                                console.log('SignUp onSuccess called');
-                                onSuccess();
-                            }}
                             appearance={{
                                 variables: {
                                     colorPrimary: "#d4ae36",
@@ -121,11 +116,6 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
                     ) : (
                         <SignIn
                             routing="hash"
-                            afterSignInUrl="/onboarding"
-                            onSuccess={() => {
-                                console.log('SignIn onSuccess called');
-                                onSuccess();
-                            }}
                             appearance={{
                                 variables: {
                                     colorPrimary: "#d4ae36",

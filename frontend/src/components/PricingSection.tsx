@@ -97,9 +97,9 @@ export const PricingSection = () => {
 
       // Check if user is already signed in
       if (isLoaded && isSignedIn) {
-        // User is already signed in, go directly to onboarding
-        console.log('User already signed in, redirecting to onboarding');
-        window.location.href = '/onboarding';
+        // User is already signed in, go to checkout (payment) first
+        console.log('User already signed in, redirecting to checkout');
+        window.location.href = '/checkout';
       } else {
         // User not signed in, show auth modal
         setPendingPackageId(packageId);
@@ -109,11 +109,11 @@ export const PricingSection = () => {
   };
 
   const handleAuthSuccess = () => {
-    console.log('handleAuthSuccess called - redirecting to onboarding');
+    console.log('handleAuthSuccess called - redirecting to checkout');
     // Close modal
     setIsAuthModalOpen(false);
-    // Route to onboarding questionnaire
-    window.location.href = '/onboarding';
+    // Route to checkout (payment) first
+    window.location.href = '/checkout';
   };
 
   const handleAuthModalClose = () => {
