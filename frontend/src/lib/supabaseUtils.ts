@@ -107,14 +107,47 @@ export async function storeOnboardingData(onboardingData: Omit<OnboardingData, '
     try {
         console.log('📝 Storing onboarding data:', onboardingData)
 
+        // Validate required fields
+        const requiredFields = ['payment_id', 'name', 'email', 'phone']
+        for (const field of requiredFields) {
+            if (!onboardingData[field as keyof typeof onboardingData]) {
+                console.error(`❌ Missing required field: ${field}`)
+                return { success: false, error: `Missing required field: ${field}` }
+            }
+        }
+
+        // Clean and validate data
+        const cleanData = {
+            ...onboardingData,
+            name: onboardingData.name?.trim() || '',
+            email: onboardingData.email?.trim() || '',
+            phone: onboardingData.phone?.trim() || '',
+            age: onboardingData.age?.trim() || '',
+            dating_goal: onboardingData.dating_goal?.trim() || '',
+            current_matches: onboardingData.current_matches?.trim() || '',
+            body_type: onboardingData.body_type?.trim() || '',
+            style_preference: onboardingData.style_preference?.trim() || '',
+            ethnicity: onboardingData.ethnicity?.trim() || '',
+            interests: onboardingData.interests?.trim() || '',
+            current_bio: onboardingData.current_bio?.trim() || '',
+            vibe: onboardingData.vibe?.trim() || '',
+            want_more: onboardingData.want_more?.trim() || '',
+            one_liner: onboardingData.one_liner?.trim() || '',
+            photo_count: onboardingData.photo_count || 0,
+            screenshot_count: onboardingData.screenshot_count || 0
+        }
+
+        console.log('📝 Cleaned onboarding data:', cleanData)
+
         const { data, error } = await supabase
             .from(TABLES.ONBOARDING)
-            .insert([onboardingData])
+            .insert([cleanData])
             .select()
             .single()
 
         if (error) {
             console.error('❌ Onboarding storage error:', error)
+            console.error('❌ Error details:', JSON.stringify(error, null, 2))
             return { success: false, error: error.message }
         }
 
