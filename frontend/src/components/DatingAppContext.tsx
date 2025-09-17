@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface DatingAppCardProps {
     appName: string;
@@ -28,13 +28,38 @@ const DatingAppCard: React.FC<DatingAppCardProps> = ({
     appStyle
 }) => {
     const [activeTab, setActiveTab] = useState<'before' | 'after'>('after');
+    const [imagesLoaded, setImagesLoaded] = useState({ before: false, after: false });
+    const [isTransitioning, setIsTransitioning] = useState(false);
+    const beforeImgRef = useRef<HTMLImageElement>(null);
+    const afterImgRef = useRef<HTMLImageElement>(null);
 
-    const getCurrentImage = () => {
-        switch (activeTab) {
-            case 'before': return beforeImage;
-            case 'after': return afterImage;
-            default: return afterImage;
-        }
+    // Preload both images
+    useEffect(() => {
+        const preloadImage = (src: string, type: 'before' | 'after') => {
+            const img = new Image();
+            img.onload = () => {
+                setImagesLoaded(prev => ({ ...prev, [type]: true }));
+            };
+            img.onerror = () => {
+                console.warn(`Failed to load ${type} image:`, src);
+            };
+            img.src = src;
+        };
+
+        preloadImage(beforeImage, 'before');
+        preloadImage(afterImage, 'after');
+    }, [beforeImage, afterImage]);
+
+    const handleTabChange = (newActiveTab: 'before' | 'after') => {
+        if (newActiveTab === activeTab) return;
+
+        setIsTransitioning(true);
+        setActiveTab(newActiveTab);
+
+        // Reset transition state after animation
+        setTimeout(() => {
+            setIsTransitioning(false);
+        }, 300);
     };
 
     const getCurrentBio = () => {
@@ -56,7 +81,7 @@ const DatingAppCard: React.FC<DatingAppCardProps> = ({
                     <div className="absolute top-4 left-4 right-4 z-20">
                         <div className="bg-white rounded-full p-1 shadow-lg flex">
                             <button
-                                onClick={() => setActiveTab('before')}
+                                onClick={() => handleTabChange('before')}
                                 className={`flex-1 py-2 px-3 text-xs font-medium rounded-full transition-all ${activeTab === 'before'
                                     ? 'bg-gray-600 text-white'
                                     : 'text-gray-600 hover:text-gray-800'
@@ -65,7 +90,7 @@ const DatingAppCard: React.FC<DatingAppCardProps> = ({
                                 Before
                             </button>
                             <button
-                                onClick={() => setActiveTab('after')}
+                                onClick={() => handleTabChange('after')}
                                 className={`flex-1 py-2 px-3 text-xs font-medium rounded-full transition-all ${activeTab === 'after'
                                     ? 'bg-gray-600 text-white'
                                     : 'text-gray-600 hover:text-gray-800'
@@ -78,11 +103,33 @@ const DatingAppCard: React.FC<DatingAppCardProps> = ({
 
                     {/* Profile Image Area - Full Bleed */}
                     <div className="relative h-full">
+                        {/* Before Image */}
                         <img
-                            src={getCurrentImage()}
-                            alt={`${appName} profile`}
-                            className="w-full h-full object-cover"
+                            ref={beforeImgRef}
+                            src={beforeImage}
+                            alt={`${appName} profile - Before`}
+                            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${activeTab === 'before' ? 'opacity-100' : 'opacity-0'
+                                }`}
                         />
+
+                        {/* After Image */}
+                        <img
+                            ref={afterImgRef}
+                            src={afterImage}
+                            alt={`${appName} profile - After`}
+                            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${activeTab === 'after' ? 'opacity-100' : 'opacity-0'
+                                }`}
+                        />
+
+                        {/* Loading State */}
+                        {(!imagesLoaded.before || !imagesLoaded.after) && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-gray-900/50">
+                                <div className="flex items-center space-x-2">
+                                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                                    <span className="text-white text-sm">Loading...</span>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Glassmorphic Info Card - True Semi Circle */}
                         <div className="absolute bottom-0 left-0 right-0">

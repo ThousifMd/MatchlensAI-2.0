@@ -35,11 +35,11 @@ export default function HomePage() {
           />
         </div>
 
-        {/* Stats Section */}
-        <StatsSection />
-
         {/* Dating App Context Section */}
         <DatingAppContext />
+
+        {/* Stats Section */}
+        <StatsSection />
 
         {/* Simple Process Section */}
         <SimpleProcessSection />
