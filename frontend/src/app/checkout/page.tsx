@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePackage } from "@/contexts/PackageContext";
-import SimplePayPalCheckout from "@/components/SimplePayPalCheckout";
+import LivePayPalCheckout from "@/components/LivePayPalCheckout";
 import { UserButton, SignedIn, SignedOut } from '@clerk/nextjs';
 import { trackPurchase, trackTransactionSuccessful } from "@/lib/metaPixel";
 
@@ -200,11 +200,17 @@ function PaymentForm({ selectedPackage, onPaymentSuccess, showNotification, onbo
 
   return (
     <div className="space-y-6">
-      <SimplePayPalCheckout
+      <LivePayPalCheckout
         selectedPackage={selectedPackage}
-        showNotification={showNotification}
         onPaymentSuccess={onPaymentSuccess}
-        onboardingFormData={onboardingFormData}
+        onPaymentError={(error) => {
+          console.error('PayPal payment error:', error);
+          showNotification('error', 'Payment failed. Please try again.');
+        }}
+        onPaymentCancel={(data) => {
+          console.log('Payment cancelled:', data);
+          showNotification('info', 'Payment was cancelled.');
+        }}
       />
 
       {error && (
