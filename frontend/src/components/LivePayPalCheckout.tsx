@@ -35,9 +35,9 @@ export default function LivePayPalCheckout({
       purchase_units: [{
         amount: {
           currency_code: "USD",
-          value: selectedPackage?.price.toString() || "97.00"
+          value: "1.00"
         },
-        description: selectedPackage?.name || "Matchlens AI Service"
+        description: "Matchlens AI Service - Test Payment"
       }]
     });
   };
