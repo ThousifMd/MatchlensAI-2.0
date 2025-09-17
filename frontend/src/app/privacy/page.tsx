@@ -75,7 +75,7 @@ export default function PrivacyPage() {
 
                             <h2 className="text-2xl font-bold text-white mb-4">11. Contact Us</h2>
                             <p className="text-white/90">
-                                For privacy-related questions or requests, contact us at privacy@matchlens.ai
+                                For privacy-related questions or requests, contact us at support@matchlensai.com
                             </p>
                         </div>
                     </div>

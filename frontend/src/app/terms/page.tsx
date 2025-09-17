@@ -65,7 +65,7 @@ export default function TermsPage() {
 
                             <h2 className="text-2xl font-bold text-white mb-4">9. Contact Information</h2>
                             <p className="text-white/90">
-                                If you have questions about these Terms of Service, please contact us at support@matchlens.ai
+                                If you have questions about these Terms of Service, please contact us at support@matchlensai.com
                             </p>
                         </div>
                     </div>

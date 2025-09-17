@@ -22,6 +22,7 @@ import Link from "next/link";
 import { usePackage } from "@/contexts/PackageContext";
 import SimplePayPalCheckout from "@/components/SimplePayPalCheckout";
 import { UserButton, SignedIn, SignedOut } from '@clerk/nextjs';
+import { trackPurchase, trackTransactionSuccessful } from "@/lib/metaPixel";
 
 // Dodo Payment Configuration
 const DODO_PAYMENT_URL = process.env.NEXT_PUBLIC_DODO_PAYMENT_URL || "https://api.dodo.com/payments";
@@ -337,6 +338,15 @@ function CheckoutContent() {
 
   const handlePaymentSuccess = async () => {
     console.log('🎉 handlePaymentSuccess called!');
+
+    // Track purchase and transaction successful events
+    if (selectedPackage) {
+      // Track purchase event
+      trackPurchase(selectedPackage.price, 'USD', selectedPackage.name);
+
+      // Track transaction successful event
+      trackTransactionSuccessful(selectedPackage.price, 'USD', selectedPackage.name, `txn_${Date.now()}`);
+    }
 
     // IMMEDIATELY trigger confetti animation and popup
     setShowConfetti(true);

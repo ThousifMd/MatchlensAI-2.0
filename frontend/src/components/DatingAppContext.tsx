@@ -139,7 +139,6 @@ const DatingAppCard: React.FC<DatingAppCardProps> = ({
                                     <h4 className="text-white font-semibold text-base">
                                         {name}, {age}
                                     </h4>
-                                    <p className="text-white/80 text-xs mb-1">{distance}</p>
                                     <p className="text-white/90 text-xs leading-relaxed line-clamp-2">
                                         {getCurrentBio()}
                                     </p>

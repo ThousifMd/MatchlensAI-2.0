@@ -512,7 +512,7 @@ function OnboardingContent() {
 
   if (isCompleted) {
     return (
-      <div className="min-h-screen text-white flex items-center justify-center p-4 relative overflow-hidden" style={{ backgroundColor: '#0E0E0F' }}>
+      <div className="min-h-screen text-white flex items-start justify-center p-4 relative overflow-hidden" style={{ backgroundColor: '#0E0E0F' }}>
         {/* Glass morphism background elements */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#0E0E0F] via-[#1a1a1a] to-[#0E0E0F]"></div>
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#d4ae36]/5 via-transparent to-transparent"></div>
@@ -679,7 +679,7 @@ function OnboardingContent() {
       </div>
 
       {/* Main Content */}
-      <div className="flex items-center justify-center min-h-[calc(100vh-120px)] p-4 relative z-10">
+      <div className="flex items-start justify-center min-h-[calc(100vh-120px)] p-4 relative z-10">
         {currentStep === 5 ? (
           <Card className="w-full max-w-2xl mx-4 bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl hover:bg-white/8 hover:border-white/20 transition-all duration-300 ease-out">
             <CardHeader className="text-center space-y-2 pb-6">
@@ -1529,7 +1529,7 @@ function OnboardingContent() {
 
 export default function OnboardingPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background">
+    <Suspense fallback={<div className="min-h-screen flex items-start justify-center bg-background pt-20">
       <div className="text-white">Loading...</div>
     </div>}>
       <OnboardingContent />

@@ -14,7 +14,7 @@ export const META_PIXEL_EVENTS = {
     PURCHASE: 'Purchase',
     ADD_TO_CART: 'AddToCart',
     VIEW_CONTENT: 'ViewContent',
-    PAGE_VIEW: 'PageView'
+    CUSTOM_EVENT: 'CustomEvent'
 } as const;
 
 // Utility function to track Meta Pixel events
@@ -56,8 +56,19 @@ export const trackPurchase = (value: number, currency: string = 'USD', packageNa
     trackMetaPixelEvent(META_PIXEL_EVENTS.PURCHASE, {
         value: value,
         currency: currency,
-        content_name: packageName || 'Matchlens Package',
+        content_name: packageName || 'Pricing Package',
         content_category: 'purchase'
+    });
+};
+
+export const trackTransactionSuccessful = (value: number, currency: string = 'USD', packageName?: string, transactionId?: string) => {
+    trackMetaPixelEvent(META_PIXEL_EVENTS.CUSTOM_EVENT, {
+        event_name: 'TransactionSuccessful',
+        value: value,
+        currency: currency,
+        content_name: packageName || 'Pricing Package',
+        content_category: 'transaction_success',
+        transaction_id: transactionId
     });
 };
 
@@ -77,9 +88,12 @@ export const trackViewContent = (contentName?: string, contentType?: string) => 
     });
 };
 
-// CTA Button tracking with specific identifiers
-export const trackCTAClick = (buttonText: string, location: string) => {
-    trackLead(`${buttonText} - ${location}`);
+export const trackCTAClick = (ctaName?: string, location?: string) => {
+    trackMetaPixelEvent(META_PIXEL_EVENTS.CUSTOM_EVENT, {
+        event_name: 'CTAClick',
+        content_name: ctaName || 'CTA Button',
+        content_category: location || 'unknown_location'
+    });
 };
 
 // Form step tracking
