@@ -70,7 +70,7 @@ export default function SimplePayPalCheckout({ selectedPackage, showNotification
 
     const storePaymentAndOnboarding = async (paymentDetails: any) => {
         try {
-            // Hardcoded to $1.00 for testing
+            // Hardcoded to $1.00 for live testing
             const actualAmountPaid = "1.00";
 
             // Use passed form data or fallback to localStorage
@@ -185,7 +185,7 @@ export default function SimplePayPalCheckout({ selectedPackage, showNotification
         <div className="w-full max-w-2xl mx-auto p-6">
             <h2 className="text-2xl font-bold mb-2 text-center text-white">Complete Your Order</h2>
             <p className="text-white/70 mb-6 text-center">
-                {selectedPackage ? `${selectedPackage.name}: $1.00 (Testing)` : 'Payment: $1.00 (Testing)'}
+                {selectedPackage ? `${selectedPackage.name}: $1.00 (Live Testing)` : 'Payment: $1.00 (Live Testing)'}
             </p>
 
             {/* PayPal Integration */}
@@ -224,8 +224,8 @@ export default function SimplePayPalCheckout({ selectedPackage, showNotification
                                                         currency_code: "USD",
                                                         value: "1.00"
                                                     },
-                                                    description: selectedPackage?.name || "Test Payment",
-                                                    custom_id: selectedPackage?.id || "test-payment"
+                                                    description: selectedPackage?.name || "Live Testing Payment",
+                                                    custom_id: selectedPackage?.id || "live-test-payment"
                                                 }],
                                                 intent: "CAPTURE"
                                             });
