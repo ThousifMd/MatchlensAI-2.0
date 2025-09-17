@@ -647,6 +647,7 @@ function CheckoutContent() {
 
       {/* Mobile Padding for Fixed Button */}
       <div className="lg:hidden h-24" />
+
     </div>
   );
 }

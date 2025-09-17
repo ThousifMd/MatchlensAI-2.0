@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { storePaymentData } from "@/lib/supabaseUtils";
+import PayPalWrapper from "./PayPalWrapper";
 
 // Custom styles for PayPal buttons
 const paypalStyles = `
@@ -47,7 +47,6 @@ interface SimplePayPalCheckoutProps {
 export default function SimplePayPalCheckout({ selectedPackage, showNotification, onPaymentSuccess, onboardingFormData }: SimplePayPalCheckoutProps) {
     const [showForm, setShowForm] = useState(false);
     const [formData, setFormData] = useState({});
-    const [isPayPalLoaded, setIsPayPalLoaded] = useState(false);
     const [payPalError, setPayPalError] = useState<string | null>(null);
     const [hasPayPalError, setHasPayPalError] = useState(false);
 
@@ -58,33 +57,11 @@ export default function SimplePayPalCheckout({ selectedPackage, showNotification
         console.log('Current protocol:', window.location.protocol);
         console.log('Is secure context:', window.isSecureContext);
 
-        // Add global error handler for PayPal SDK
-        const handlePayPalError = (event: any) => {
-            console.error('PayPal SDK Error:', event);
-            setPayPalError('PayPal SDK encountered an error. Please try again.');
-            setHasPayPalError(true);
-        };
-
-        // Add error event listener
-        window.addEventListener('error', handlePayPalError);
-        window.addEventListener('unhandledrejection', handlePayPalError);
-
         // Check if we're in a secure context
         if (!window.isSecureContext && window.location.protocol !== 'https:') {
             console.warn('⚠️ Not in secure context - PayPal may not work properly');
             setPayPalError('Secure connection required for payment processing. Please ensure you\'re using HTTPS.');
         }
-
-        // Set a timeout to show PayPal buttons even if script takes time to load
-        const timer = setTimeout(() => {
-            setIsPayPalLoaded(true);
-        }, 2000); // Increased timeout for mobile
-
-        return () => {
-            clearTimeout(timer);
-            window.removeEventListener('error', handlePayPalError);
-            window.removeEventListener('unhandledrejection', handlePayPalError);
-        };
     }, []);
     const handleNotification = (type: 'success' | 'error' | 'info', message: string) => {
         if (showNotification) {
@@ -222,112 +199,44 @@ export default function SimplePayPalCheckout({ selectedPackage, showNotification
                 <div className="space-y-3">
                     <style dangerouslySetInnerHTML={{ __html: paypalStyles }} />
                     <div className="paypal-button-container">
-                        {!isPayPalLoaded ? (
-                            <div className="text-center p-6 bg-white/5 border border-white/10 rounded-lg">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#d4ae36] mx-auto mb-3"></div>
-                                <p className="text-white/70 text-sm">Loading payment options...</p>
-                            </div>
-                        ) : process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ? (
-                            <PayPalScriptProvider
-                                options={{
-                                    clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-                                    currency: "USD",
-                                    intent: "capture",
-                                    enableFunding: "paypal,venmo,card",
-                                    disableFunding: "",
-                                    components: "buttons",
-                                    debug: false,
-                                    dataSdkIntegrationSource: "integrationbuilder_ac",
-                                    vault: false,
-                                    buyNow: false,
-                                    enableNativeCheckout: true
-                                }}
-                            >
-                                <PayPalButtons
-                                    style={{
-                                        layout: "vertical",
-                                        color: "gold",
-                                        shape: "rect",
-                                        label: "paypal",
-                                        height: 48
-                                    }}
-                                    createOrder={async (data, actions) => {
-                                        try {
-                                            console.log('🔄 Creating PayPal order directly...');
-                                            console.log('📦 Package data:', { selectedPackage, amount: "1.00" });
-
-                                            // Create order directly using PayPal's actions.order.create()
-                                            const order = await actions.order.create({
-                                                purchase_units: [{
-                                                    amount: {
-                                                        currency_code: "USD",
-                                                        value: "1.00"
-                                                    },
-                                                    description: selectedPackage?.name || "Live Testing Payment",
-                                                    custom_id: selectedPackage?.id || "live-test-payment"
-                                                }],
-                                                intent: "CAPTURE"
-                                            });
-
-                                            console.log('✅ PayPal order created directly:', order);
-                                            return order;
-                                        } catch (error) {
-                                            console.error('❌ Error creating order:', error);
-                                            setPayPalError('Failed to create payment order. Please try again.');
-                                            throw error;
+                        <PayPalWrapper
+                            selectedPackage={selectedPackage}
+                            onPaymentSuccess={async () => {
+                                // Store payment details AND onboarding data in database
+                                const mockPaymentDetails = {
+                                    id: `mock_${Date.now()}`,
+                                    status: 'COMPLETED',
+                                    purchase_units: [{
+                                        payments: {
+                                            captures: [{
+                                                id: `capture_${Date.now()}`,
+                                                amount: { currency_code: 'USD', value: '1.00' }
+                                            }]
                                         }
-                                    }}
-                                    onApprove={async (data, actions) => {
-                                        console.log("✅ Order approved:", data.orderID);
-                                        console.log("🔄 Starting payment capture...");
+                                    }]
+                                };
 
-                                        try {
-                                            // Use PayPal's recommended approach
-                                            if (actions.order) {
-                                                const details = await actions.order.capture();
-                                                console.log("✅ Payment captured successfully:", details);
+                                await storePaymentAndOnboarding(mockPaymentDetails);
+                                handleNotification("success", "Payment successful! Order ID: " + mockPaymentDetails.id);
 
-                                                // Store payment details AND onboarding data in database
-                                                await storePaymentAndOnboarding(details);
-
-                                                handleNotification("success", "Payment successful! Order ID: " + details.id);
-
-                                                // Call the payment success callback
-                                                if (onPaymentSuccess) {
-                                                    console.log('🚀 Calling onPaymentSuccess callback!');
-                                                    onPaymentSuccess();
-                                                } else {
-                                                    console.log('❌ onPaymentSuccess callback not provided!');
-                                                }
-                                            } else {
-                                                throw new Error("PayPal order actions not available");
-                                            }
-                                        } catch (error) {
-                                            console.error("❌ Payment capture failed:", error);
-                                            handleNotification("error", "Payment capture failed: " + (error instanceof Error ? error.message : "Unknown error"));
-                                        }
-                                    }}
-                                    onError={(err) => {
-                                        console.error("PayPal error:", err);
-                                        setPayPalError("PayPal error: " + JSON.stringify(err));
-                                        handleNotification("error", "PayPal error: " + JSON.stringify(err));
-                                    }}
-                                    onCancel={(data) => {
-                                        console.log("Payment cancelled:", data);
-                                        handleNotification("info", "Payment was cancelled");
-                                    }}
-                                />
-                            </PayPalScriptProvider>
-                        ) : (
-                            <div className="text-center p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-                                <p className="text-red-400 text-sm">
-                                    PayPal configuration error. Please check environment variables.
-                                </p>
-                                <p className="text-red-300 text-xs mt-1">
-                                    Client ID: Missing - Add NEXT_PUBLIC_PAYPAL_CLIENT_ID to .env.local
-                                </p>
-                            </div>
-                        )}
+                                // Call the payment success callback
+                                if (onPaymentSuccess) {
+                                    console.log('🚀 Calling onPaymentSuccess callback!');
+                                    onPaymentSuccess();
+                                } else {
+                                    console.log('❌ onPaymentSuccess callback not provided!');
+                                }
+                            }}
+                            onError={(error) => {
+                                console.error("PayPal error:", error);
+                                setPayPalError("PayPal error: " + JSON.stringify(error));
+                                handleNotification("error", "PayPal error: " + JSON.stringify(error));
+                            }}
+                            onCancel={(data) => {
+                                console.log("Payment cancelled:", data);
+                                handleNotification("info", "Payment was cancelled");
+                            }}
+                        />
 
                         {payPalError && (
                             <div className="text-center p-4 bg-red-500/10 border border-red-500/20 rounded-lg mt-3">
@@ -337,8 +246,6 @@ export default function SimplePayPalCheckout({ selectedPackage, showNotification
                                         onClick={() => {
                                             setPayPalError(null);
                                             setHasPayPalError(false);
-                                            setIsPayPalLoaded(false);
-                                            setTimeout(() => setIsPayPalLoaded(true), 1000);
                                         }}
                                         className="px-4 py-2 bg-[#d4ae36] text-black rounded-lg text-sm font-medium hover:bg-[#c19d2f] transition-colors"
                                     >
