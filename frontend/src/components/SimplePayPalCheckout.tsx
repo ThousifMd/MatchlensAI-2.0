@@ -203,10 +203,10 @@ export default function SimplePayPalCheckout({ selectedPackage, showNotification
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#d4ae36] mx-auto mb-3"></div>
                                 <p className="text-white/70 text-sm">Loading payment options...</p>
                             </div>
-                        ) : (process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "Aa3Qhzd--_8MNtB9U8LctWUzDXw3eO7XPw2cyHUzwa9e_sYlD1pXnQK_K3iXNIXD2i64F8AUfPiWL-AT") ? (
+                        ) : process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ? (
                             <PayPalScriptProvider
                                 options={{
-                                    clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "Aa3Qhzd--_8MNtB9U8LctWUzDXw3eO7XPw2cyHUzwa9e_sYlD1pXnQK_K3iXNIXD2i64F8AUfPiWL-AT",
+                                    clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
                                     currency: "USD",
                                     intent: "capture"
                                 }}
@@ -284,7 +284,7 @@ export default function SimplePayPalCheckout({ selectedPackage, showNotification
                                     PayPal configuration error. Please check environment variables.
                                 </p>
                                 <p className="text-red-300 text-xs mt-1">
-                                    Client ID: Missing - Using fallback
+                                    Client ID: Missing - Add NEXT_PUBLIC_PAYPAL_CLIENT_ID to .env.local
                                 </p>
                             </div>
                         )}
