@@ -354,6 +354,14 @@ function CheckoutContent() {
       trackTransactionSuccessful(selectedPackage.price, 'USD', selectedPackage.name, `txn_${Date.now()}`);
     }
 
+    // Set localStorage values required by onboarding page
+    const paymentId = `paypal_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem('lastPaymentId', paymentId);
+    localStorage.setItem('paymentCompleted', 'true');
+    localStorage.setItem('selectedPackage', JSON.stringify(selectedPackage));
+
+    console.log('💾 Payment data saved to localStorage:', { paymentId, selectedPackage });
+
     // IMMEDIATELY trigger confetti animation and popup
     setShowConfetti(true);
     setShowSuccessPopup(true);
