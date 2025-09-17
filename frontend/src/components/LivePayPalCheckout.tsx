@@ -43,9 +43,21 @@ export default function LivePayPalCheckout({
   };
 
   const onApprove = async (data: any, actions: any) => {
-    const details = await actions.order.capture();
-    if (onPaymentSuccess) {
-      onPaymentSuccess(details);
+    console.log('🎉 PayPal payment approved:', data);
+    try {
+      const details = await actions.order.capture();
+      console.log('✅ PayPal payment captured:', details);
+      if (onPaymentSuccess) {
+        console.log('🚀 Calling onPaymentSuccess callback...');
+        onPaymentSuccess(details);
+      } else {
+        console.error('❌ onPaymentSuccess callback not provided');
+      }
+    } catch (error) {
+      console.error('❌ PayPal payment capture failed:', error);
+      if (onPaymentError) {
+        onPaymentError(error);
+      }
     }
   };
 

@@ -342,8 +342,8 @@ function CheckoutContent() {
     }
   }, [contextPackage]);
 
-  const handlePaymentSuccess = async () => {
-    console.log('🎉 handlePaymentSuccess called!');
+  const handlePaymentSuccess = async (details?: any) => {
+    console.log('🎉 handlePaymentSuccess called with details:', details);
 
     // Track purchase and transaction successful events
     if (selectedPackage) {
@@ -374,10 +374,9 @@ function CheckoutContent() {
     // Hide success popup after 5 seconds
     setTimeout(() => setShowSuccessPopup(false), 5000);
 
-    // Redirect to onboarding page after 5 seconds
-    setTimeout(() => {
-      router.push('/onboarding');
-    }, 5000);
+    // Redirect to onboarding page immediately
+    console.log('🔄 Redirecting to onboarding page...');
+    router.push('/onboarding');
   };
 
   if (!selectedPackage) {
