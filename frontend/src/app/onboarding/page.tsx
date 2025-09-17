@@ -13,6 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, User, Users, Dumbbell, Plane, UtensilsCrossed, Camera, Music, BookOpen, Gamepad2, Heart, Coffee, Mountain, Upload, X, Check, Smartphone, FileText, TrendingUp, Mail, Phone, Clock } from "lucide-react";
 import { trackInitiateCheckout, trackCompleteRegistration, trackFormStep } from "@/lib/metaPixel";
 import { completeOnboardingFlow } from "@/lib/supabaseUtils";
+import { UserButton } from '@clerk/nextjs';
 
 interface OnboardingData {
   name: string;
@@ -143,6 +144,7 @@ const badExamples = [
 function OnboardingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+
   const [currentStep, setCurrentStep] = useState(1);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -174,13 +176,8 @@ function OnboardingContent() {
 
   // Check for payment verification and clear any stored form data on page load
   useEffect(() => {
-    // Check if user has completed payment
-    const paymentCompleted = localStorage.getItem('paymentCompleted');
-    if (!paymentCompleted) {
-      // Redirect to pricing if no payment found
-      router.push('/');
-      return;
-    }
+    // Allow access to onboarding after authentication
+    // Payment will be handled later in the flow
 
     // Check if we're coming from checkout (step=5 parameter)
     const stepParam = searchParams.get('step');
@@ -632,11 +629,26 @@ function OnboardingContent() {
               </span>
             </div>
 
-            {/* Right side - Step indicator and Skip button */}
+            {/* Right side - Step indicator, User Profile, and Skip button */}
             <div className="flex items-center gap-3 flex-shrink-0">
               <span className="text-xs font-medium text-white whitespace-nowrap">
                 Step {currentStep} of {totalSteps}
               </span>
+              <UserButton
+                appearance={{
+                  elements: {
+                    userButtonPopoverCard: 'bg-[#1a1a1a] border border-[#374151] shadow-2xl',
+                    userButtonPopoverActionButton: 'text-white hover:bg-[#374151]',
+                    userButtonPopoverActionButtonText: 'text-white',
+                    userButtonPopoverFooter: 'display: none !important',
+                    userButtonPopoverFooterText: 'display: none !important',
+                    userButtonPopoverFooterAction: 'display: none !important',
+                    userButtonPopoverFooterActionLink: 'display: none !important',
+                    userButtonPopoverFooterActionText: 'display: none !important',
+                    userButtonPopoverFooterActionIcon: 'display: none !important',
+                  }
+                }}
+              />
               {currentStep === 4 && (
                 <Button
                   variant="ghost"

@@ -1,12 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, Shield } from "lucide-react";
 import { usePackage, Package } from "@/contexts/PackageContext";
 import { trackAddToCart, trackCTAClick } from "@/lib/metaPixel";
+import { useUser } from '@clerk/nextjs';
+import AuthModal from "./AuthModal";
 
 const pricingTiers = [
   {
@@ -71,6 +73,9 @@ const pricingTiers = [
 export const PricingSection = () => {
   const { selectedPackage, setSelectedPackage } = usePackage();
   const [localSelectedPackage, setLocalSelectedPackage] = React.useState<string | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [pendingPackageId, setPendingPackageId] = useState<string | null>(null);
+  const { isSignedIn, isLoaded } = useUser();
 
   const handlePackageSelect = (packageId: string) => {
     setLocalSelectedPackage(packageId);
@@ -89,9 +94,31 @@ export const PricingSection = () => {
       setSelectedPackage(packageData);
       // Store selected package in localStorage for payment page
       localStorage.setItem('selectedPackage', packageId);
-      // Route to checkout directly (auth will be handled by navbar)
-      window.location.href = `/checkout`;
+
+      // Check if user is already signed in
+      if (isLoaded && isSignedIn) {
+        // User is already signed in, go directly to onboarding
+        console.log('User already signed in, redirecting to onboarding');
+        window.location.href = '/onboarding';
+      } else {
+        // User not signed in, show auth modal
+        setPendingPackageId(packageId);
+        setIsAuthModalOpen(true);
+      }
     }
+  };
+
+  const handleAuthSuccess = () => {
+    console.log('handleAuthSuccess called - redirecting to onboarding');
+    // Close modal
+    setIsAuthModalOpen(false);
+    // Route to onboarding questionnaire
+    window.location.href = '/onboarding';
+  };
+
+  const handleAuthModalClose = () => {
+    setIsAuthModalOpen(false);
+    setPendingPackageId(null);
   };
 
   return (
@@ -258,6 +285,13 @@ export const PricingSection = () => {
 
         </div>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={handleAuthModalClose}
+        onSuccess={handleAuthSuccess}
+      />
     </section>
   );
 };

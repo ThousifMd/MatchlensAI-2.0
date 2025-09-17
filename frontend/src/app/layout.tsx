@@ -174,6 +174,8 @@ export default function RootLayout({
         />
         <ClerkProvider
           publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_test_placeholder'}
+          afterSignInUrl="/onboarding"
+          afterSignUpUrl="/onboarding"
           appearance={{
             baseTheme: undefined,
             variables: {
@@ -207,7 +209,7 @@ export default function RootLayout({
               modalHeaderTitle: 'text-white text-xl font-semibold',
               modalHeaderSubtitle: 'text-gray-400 text-sm',
               modalCloseButton: 'text-gray-400 hover:text-white',
-              
+
               // Form styling
               formButtonPrimary: 'bg-[#FFD700] hover:bg-[#FFA500] text-black font-semibold border-0 shadow-lg',
               formFieldInput: 'bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-[#FFD700] focus:ring-[#FFD700]/20',
@@ -215,22 +217,22 @@ export default function RootLayout({
               formFieldSuccessText: 'text-green-400',
               formFieldErrorText: 'text-red-400',
               formFieldWarningText: 'text-yellow-400',
-              
+
               // Social buttons
               socialButtonsBlockButton: 'bg-gray-800 hover:bg-gray-700 text-white border-gray-700 hover:border-[#FFD700]/50',
               socialButtonsBlockButtonText: 'text-white',
               socialButtonsBlockButtonArrow: 'text-[#FFD700]',
-              
+
               // Links and text
               footerActionLink: 'text-[#FFD700] hover:text-[#FFA500] font-medium',
               identityPreviewText: 'text-gray-400',
               formResendCodeLink: 'text-[#FFD700] hover:text-[#FFA500]',
-              
+
               // Card styling
               card: 'bg-gray-900 border border-[#FFD700]/30 shadow-2xl',
               headerTitle: 'text-white',
               headerSubtitle: 'text-gray-400',
-              
+
               // User button dropdown
               userButtonPopoverCard: 'bg-gray-900 border border-[#FFD700]/30 shadow-2xl',
               userButtonPopoverActionButton: 'text-white hover:bg-[#FFD700]/10 hover:text-[#FFD700] transition-colors',
@@ -246,6 +248,7 @@ export default function RootLayout({
               userButtonPopoverFooter: 'bg-gray-800 border-t border-[#FFD700]/20',
               userButtonPopoverFooterText: 'text-gray-400',
               userButtonPopoverFooterLink: 'text-[#FFD700] hover:text-[#FFA500]',
+<<<<<<< HEAD
               
               // Hide development mode and footer elements
               footer: 'hidden !important',
@@ -262,6 +265,19 @@ export default function RootLayout({
               'div[data-localization-key*="footer"]': 'display: none !important',
               'span[data-localization-key*="footer"]': 'display: none !important',
               'p[data-localization-key*="footer"]': 'display: none !important',
+=======
+
+              // Hide development mode
+              footer: 'hidden',
+              footerText: 'hidden',
+              footerAction: 'hidden',
+              footerActionText: 'hidden',
+              footerActionLink: 'hidden',
+              footerActionText__signIn: 'hidden',
+              footerActionText__signUp: 'hidden',
+              footerActionLink__signIn: 'hidden',
+              footerActionLink__signUp: 'hidden',
+>>>>>>> 63e462b (Almost the flow is fixedgit add .)
             }
           }}
         >
