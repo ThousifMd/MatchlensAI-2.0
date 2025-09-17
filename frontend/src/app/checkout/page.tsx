@@ -354,7 +354,7 @@ function CheckoutContent() {
       trackTransactionSuccessful(selectedPackage.price, 'USD', selectedPackage.name, `txn_${Date.now()}`);
     }
 
-    // Create a real payment record in Supabase
+    // Create a payment record directly in Supabase (client-side)
     try {
       const paymentData = {
         order_id: `paypal_${Date.now()}`,
@@ -362,44 +362,53 @@ function CheckoutContent() {
         currency: "USD",
         package_id: selectedPackage?.id || "test_package",
         package_name: selectedPackage?.name || "Test Package",
-        customer_email: "customer@example.com", // You might want to get this from the form
-        customer_name: "Customer", // You might want to get this from the form
+        customer_email: "customer@example.com",
+        customer_name: "Customer",
         status: "completed"
       };
 
-      console.log('💳 Creating payment record in Supabase:', paymentData);
+      console.log('💳 Creating payment record directly in Supabase:', paymentData);
 
-      const response = await fetch('/api/create-payment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(paymentData)
-      });
-
-      if (response.ok) {
-        const paymentResult = await response.json();
-        const paymentId = paymentResult.payment_id;
-        
-        // Set localStorage values with real payment_id
-        localStorage.setItem('lastPaymentId', paymentId);
-        localStorage.setItem('paymentCompleted', 'true');
-        localStorage.setItem('selectedPackage', JSON.stringify(selectedPackage));
-
-        console.log('✅ Real payment record created:', { paymentId, selectedPackage });
-      } else {
-        throw new Error('Failed to create payment record');
-      }
-    } catch (error) {
-      console.error('❌ Failed to create payment record:', error);
+      // Import supabase client directly
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
       
-      // Fallback: Use a UUID format for testing
-      const paymentId = `550e8400-e29b-41d4-a716-${Date.now().toString().slice(-12)}`;
+      if (!supabaseUrl || !supabaseKey) {
+        throw new Error('Supabase credentials not available');
+      }
+
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      
+      const { data, error } = await supabase
+        .from('payments')
+        .insert([paymentData])
+        .select()
+        .single();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      const paymentId = data.payment_id;
+      
+      // Set localStorage values with real payment_id
       localStorage.setItem('lastPaymentId', paymentId);
       localStorage.setItem('paymentCompleted', 'true');
       localStorage.setItem('selectedPackage', JSON.stringify(selectedPackage));
 
-      console.log('⚠️ Using fallback payment_id:', { paymentId, selectedPackage });
+      console.log('✅ Real payment record created:', { paymentId, selectedPackage });
+      
+    } catch (error) {
+      console.error('❌ Failed to create payment record:', error);
+      
+      // Fallback: Use localStorage fallback in supabaseUtils
+      const paymentId = `local_${Date.now()}`;
+      localStorage.setItem('lastPaymentId', paymentId);
+      localStorage.setItem('paymentCompleted', 'true');
+      localStorage.setItem('selectedPackage', JSON.stringify(selectedPackage));
+
+      console.log('⚠️ Using localStorage fallback payment_id:', { paymentId, selectedPackage });
     }
 
     // IMMEDIATELY trigger confetti animation and popup

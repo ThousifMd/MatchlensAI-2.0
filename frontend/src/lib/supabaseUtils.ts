@@ -210,9 +210,9 @@ export async function completeOnboardingFlow(
     try {
         console.log('🚀 Starting complete onboarding flow...')
 
-        // Check if Supabase is configured
-        if (!isSupabaseConfigured()) {
-            console.log('⚠️ Supabase not configured. Logging onboarding data to console and localStorage.')
+        // Check if Supabase is configured or if this is a local payment
+        if (!isSupabaseConfigured() || onboardingData.payment_id.startsWith('local_')) {
+            console.log('⚠️ Supabase not configured or local payment. Logging onboarding data to console and localStorage.')
             console.log('📝 ONBOARDING DATA:', onboardingData)
             console.log('📸 Profile photos:', profilePhotos.length)
             console.log('📱 Screenshots:', screenshots.length)
