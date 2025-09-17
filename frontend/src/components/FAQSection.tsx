@@ -35,7 +35,7 @@ const faqData: FAQItem[] = [
         answer: "AI handles initial enhancements. Human experts review and perfect everything before delivery."
     },
     {
-        question: "Does this work for LinkedIn / Instagram / Tinder / Bumble?",
+        question: "Does this work for any social media platform?",
         answer: "Yes. We optimize for all major dating apps. Each has slightly different strategies we account for."
     },
     {

@@ -150,7 +150,6 @@ export const PricingSection = () => {
                 </p>
                 <div className="inline-flex flex-col sm:flex-row items-center gap-2 sm:gap-3 bg-gradient-to-r from-[#FFD700]/10 to-[#FFA500]/10 backdrop-blur-sm border border-[#FFD700]/30 rounded-2xl px-6 py-3 mb-4">
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                     <span className="text-white font-semibold">Most users see</span>
                   </div>
                   <span className="text-2xl font-bold text-[#FFD700]">3x more attention</span>
@@ -158,7 +157,6 @@ export const PricingSection = () => {
                 </div>
                 <div className="inline-flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-gradient-to-r from-green-500/10 to-emerald-500/10 backdrop-blur-sm border border-green-500/30 rounded-2xl px-6 py-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                     <span className="text-white font-semibold">💯 Money-back guarantee</span>
                   </div>
                   <span className="text-green-400 font-bold">Contact within 7 days</span>

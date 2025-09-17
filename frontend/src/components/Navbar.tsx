@@ -8,8 +8,8 @@ import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@cl
 
 // Check if Clerk is configured
 const isClerkConfigured = () => {
-  return process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && 
-         process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY !== 'pk_test_placeholder';
+  return process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY !== 'pk_test_placeholder';
 };
 
 type NavbarProps = {
@@ -67,47 +67,31 @@ export default function Navbar({ ctaHref, className }: NavbarProps) {
           </nav>
 
           {/* Authentication & CTA */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-8">
             {isClerkConfigured() ? (
               <>
-                {/* Sign In/Sign Up buttons for non-authenticated users */}
-                <SignedOut>
-                  <SignInButton mode="modal">
-                    <button className="px-4 py-2 text-white hover:text-[#FFD700] transition-colors text-sm font-medium">
-                      Sign In
-                    </button>
-                  </SignInButton>
-                  <SignUpButton mode="modal">
-                    <button className="px-4 py-2 bg-[#FFD700] hover:bg-[#FFA500] text-black rounded-lg font-medium text-sm transition-all duration-300">
-                      Sign Up
-                    </button>
-                  </SignUpButton>
-                </SignedOut>
+                {/* CTA Button - show for all users */}
+                <button
+                  className="inline-flex items-center px-5 py-2 bg-transparent backdrop-blur-sm border border-[#FFD700]/40 rounded-lg font-medium hover:border-[#FFD700]/60 hover:bg-transparent transition-all duration-300"
+                  onClick={() => {
+                    trackCTAClick("Join the Top 5%", "Navbar Desktop");
+                    document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  <span className="bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FFD700] bg-clip-text text-transparent">
+                    Join the Top 5%
+                  </span>
+                </button>
 
                 {/* User button for authenticated users */}
                 <SignedIn>
-                  <UserButton 
+                  <UserButton
                     appearance={{
                       elements: {
-                        avatarBox: "w-8 h-8"
+                        avatarBox: "w-10 h-10"
                       }
                     }}
                   />
-                </SignedIn>
-
-                {/* CTA Button - only show for authenticated users */}
-                <SignedIn>
-                  <button
-                    className="inline-flex items-center px-5 py-2 bg-transparent backdrop-blur-sm border border-[#FFD700]/40 rounded-lg font-medium hover:border-[#FFD700]/60 hover:bg-transparent transition-all duration-300"
-                    onClick={() => {
-                      trackCTAClick("Join the Top 5%", "Navbar Desktop");
-                      document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                  >
-                    <span className="bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FFD700] bg-clip-text text-transparent">
-                      Join the Top 5%
-                    </span>
-                  </button>
                 </SignedIn>
               </>
             ) : (

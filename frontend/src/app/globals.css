@@ -12,11 +12,110 @@
 .cl-footerAction,
 .cl-footerActionText,
 .cl-footerActionLink {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  height: 0 !important;
-  overflow: hidden !important;
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Hide development mode text specifically */
+.cl-userButtonPopoverFooter,
+.cl-userButtonPopoverFooterText {
+    display: none !important;
+}
+
+/* Theme the user popup to match website colors */
+.cl-userButtonPopoverCard {
+    background: #1a1a1a !important;
+    border: 1px solid rgba(212, 174, 54, 0.3) !important;
+    border-radius: 12px !important;
+}
+
+.cl-userButtonPopoverMain {
+    background: #1a1a1a !important;
+}
+
+.cl-userButtonPopoverHeader {
+    background: #1a1a1a !important;
+}
+
+.cl-userButtonPopoverActionButtonIcon {
+    color: #d4ae36 !important;
+}
+
+.cl-userButtonPopoverActionButtonIcon__signOut {
+    color: #ef4444 !important;
+}
+
+/* Hide the "Manage Account" action button */
+.cl-userButtonPopoverActionButton__manageAccount {
+    display: none !important;
+}
+
+.cl-userButtonPopoverActionButton:hover {
+    background: rgba(212, 174, 54, 0.1) !important;
+    color: #d4ae36 !important;
+}
+
+/* Change avatar background from blue to pitch black */
+.cl-userButtonAvatarBox,
+.cl-userButtonAvatarBox>div,
+.cl-userButtonAvatarBox img,
+.cl-userButtonAvatarBox svg,
+.cl-avatarBox,
+.cl-avatarBox>div,
+.cl-userButtonPopoverCard .cl-userButtonAvatarBox,
+.cl-userButtonPopoverCard .cl-userButtonAvatarBox>div,
+.cl-userButtonPopoverCard .cl-userButtonAvatarBox>*,
+[class*="avatarBox"],
+[class*="avatarBox"]>div,
+[class*="avatarBox"]>* {
+    background: #000000 !important;
+    background-color: #000000 !important;
+    background-image: none !important;
+}
+
+/* Style social login button borders */
+.cl-socialButtonsBlockButton {
+    border: 1px solid #d4ae36 !important;
+    border-radius: 8px !important;
+}
+
+.cl-socialButtonsBlockButton:hover {
+    border-color: #c19d2f !important;
+    box-shadow: 0 0 0 1px #d4ae36 !important;
+}
+
+/* Specific styling for each social button */
+.cl-socialButtonsBlockButton__google {
+    border: 1px solid #d4ae36 !important;
+}
+
+.cl-socialButtonsBlockButton__linkedin {
+    border: 1px solid #d4ae36 !important;
+}
+
+.cl-socialButtonsBlockButton__tiktok {
+    border: 1px solid #d4ae36 !important;
+}
+
+/* Hide "Last used" text */
+.cl-socialButtonsBlockButtonText {
+    display: none !important;
+}
+
+/* Make ONLY the logos bigger - not the buttons */
+.cl-socialButtonsBlockButton svg {
+    width: 36px !important;
+    height: 36px !important;
+    transform: scale(1.5) !important;
+}
+
+.cl-socialButtonsBlockButton img {
+    width: 36px !important;
+    height: 36px !important;
+    transform: scale(1.5) !important;
 }
 
 @theme {

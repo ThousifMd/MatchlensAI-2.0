@@ -21,6 +21,7 @@ import {
 import Link from "next/link";
 import { usePackage } from "@/contexts/PackageContext";
 import SimplePayPalCheckout from "@/components/SimplePayPalCheckout";
+import { UserButton, SignedIn, SignedOut } from '@clerk/nextjs';
 
 // Dodo Payment Configuration
 const DODO_PAYMENT_URL = process.env.NEXT_PUBLIC_DODO_PAYMENT_URL || "https://api.dodo.com/payments";
@@ -291,7 +292,6 @@ function CheckoutContent() {
   const [notification, setNotification] = useState<{ type: 'success' | 'error' | 'info', message: string } | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const [countdown, setCountdown] = useState(24 * 60 * 60); // 24 hours in seconds
   const [onboardingFormData, setOnboardingFormData] = useState<any>(null);
 
   const showNotification = (type: 'success' | 'error' | 'info', message: string) => {
@@ -315,24 +315,6 @@ function CheckoutContent() {
     }
   }, []);
 
-  // Countdown timer effect
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (showSuccessPopup && countdown > 0) {
-      interval = setInterval(() => {
-        setCountdown((prev) => prev - 1);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [showSuccessPopup, countdown]);
-
-  // Format countdown time
-  const formatTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
 
   // Use package from context or fallback to localStorage (client-side only)
   const [selectedPackage, setSelectedPackageState] = useState<Package | null>(null);
@@ -359,20 +341,19 @@ function CheckoutContent() {
     // IMMEDIATELY trigger confetti animation and popup
     setShowConfetti(true);
     setShowSuccessPopup(true);
-    setCountdown(24 * 60 * 60); // Reset to 24 hours
 
     console.log('🎊 Confetti and popup should be showing now!');
 
     // Hide confetti after 3 seconds
     setTimeout(() => setShowConfetti(false), 3000);
 
-    // Hide success popup after 3 seconds
-    setTimeout(() => setShowSuccessPopup(false), 3000);
+    // Hide success popup after 5 seconds
+    setTimeout(() => setShowSuccessPopup(false), 5000);
 
-    // Redirect to onboarding page after a short delay
+    // Redirect to onboarding page after 5 seconds
     setTimeout(() => {
       router.push('/onboarding');
-    }, 2000);
+    }, 5000);
   };
 
   if (!selectedPackage) {
@@ -444,16 +425,6 @@ function CheckoutContent() {
               <p className="text-gray-300">Your enhanced photos will be ready soon</p>
             </div>
 
-            {/* Countdown Timer */}
-            <div className="mb-6">
-              <div className="bg-black/30 rounded-xl p-6 border border-[#d4ae36]/30">
-                <h3 className="text-lg font-semibold text-[#d4ae36] mb-3">Your Profile Will Be Ready In:</h3>
-                <div className="text-4xl font-mono font-bold text-white mb-2">
-                  {formatTime(countdown)}
-                </div>
-                <p className="text-sm text-gray-400">Hours : Minutes : Seconds</p>
-              </div>
-            </div>
 
 
             {/* Action Buttons */}
@@ -481,8 +452,8 @@ function CheckoutContent() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-8">
 
-        {/* Back Button */}
-        <div className="mb-6">
+        {/* Header with Back Button and User Profile */}
+        <div className="mb-6 flex items-center justify-between">
           <Button
             variant="ghost"
             onClick={() => router.push('/')}
@@ -491,6 +462,17 @@ function CheckoutContent() {
             <ArrowLeft className="h-4 w-4" />
             Back to Pricing
           </Button>
+
+          {/* User Profile Avatar */}
+          <SignedIn>
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: "w-10 h-10"
+                }
+              }}
+            />
+          </SignedIn>
         </div>
 
         {/* First Impression Header */}

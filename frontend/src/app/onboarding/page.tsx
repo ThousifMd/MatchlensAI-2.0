@@ -293,6 +293,12 @@ function OnboardingContent() {
     formData.wantMore !== "";
 
   const handleContinue = async () => {
+    // Prevent multiple rapid clicks
+    if (isSubmitting) {
+      console.log('⚠️ Submission already in progress, ignoring duplicate click');
+      return;
+    }
+
     if (currentStep === 1 && isStep1Valid) {
       trackFormStep(1, "Basic Information");
       setCurrentStep(2);
@@ -306,12 +312,6 @@ function OnboardingContent() {
       trackFormStep(4, "Bio and Preferences");
       setCurrentStep(5);
     } else if (currentStep === 5 && isStep5Valid) {
-      // Prevent duplicate submissions
-      if (isSubmitting) {
-        console.log('⚠️ Submission already in progress, ignoring duplicate click');
-        return;
-      }
-
       setIsSubmitting(true);
       console.log('🚀 Starting form submission...');
 
@@ -849,15 +849,23 @@ function OnboardingContent() {
               {/* Continue Button */}
               <div className="pt-6">
                 <Button
-                  onClick={handleContinue}
-                  disabled={!isStep5Valid}
-                  className="w-full h-12 bg-[#FFD700] hover:bg-[#d4ae36] disabled:bg-gray-700 disabled:text-gray-400 text-black text-lg font-medium transition-all duration-200"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (isStep5Valid && !isSubmitting) {
+                      handleContinue();
+                    }
+                  }}
+                  disabled={!isStep5Valid || isSubmitting}
+                  className="w-full h-12 bg-[#FFD700] hover:bg-[#d4ae36] disabled:bg-gray-700 disabled:text-gray-400 text-black text-lg font-medium transition-all duration-200 cursor-pointer"
+                  type="button"
                 >
-                  {isStep5Valid ? "➡️ Next → Build My Profile" :
-                    emailError ? "Please fix email errors" :
-                      confirmEmailError ? "Please fix email confirmation errors" :
-                        phoneError ? "Please fix phone number errors" :
-                          "Select your vibe & preferences"
+                  {isSubmitting ? "Processing..." :
+                    isStep5Valid ? "➡️ Next → Build My Profile" :
+                      emailError ? "Please fix email errors" :
+                        confirmEmailError ? "Please fix email confirmation errors" :
+                          phoneError ? "Please fix phone number errors" :
+                            "Select your vibe & preferences"
                   }
                 </Button>
               </div>

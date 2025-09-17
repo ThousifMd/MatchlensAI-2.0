@@ -132,6 +132,102 @@ export default function RootLayout({
             `,
           }}
         />
+
+        {/* Force avatar background to black */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined') {
+                function forceAvatarBlack() {
+                  // Find all avatar elements and force them to be black
+                  const allElements = document.querySelectorAll('*');
+                  allElements.forEach(el => {
+                    // Check if this element looks like an avatar (circular with text inside)
+                    const computedStyle = window.getComputedStyle(el);
+                    const hasText = el.textContent && el.textContent.trim().length === 1;
+                    const isCircular = computedStyle.borderRadius.includes('50%') || computedStyle.borderRadius.includes('100%');
+                    const hasBackground = computedStyle.backgroundColor !== 'rgba(0, 0, 0, 0)' && computedStyle.backgroundColor !== 'transparent';
+                    
+                    if (hasText && isCircular && hasBackground) {
+                      el.style.backgroundColor = '#000000';
+                      el.style.background = '#000000';
+                      el.style.backgroundImage = 'none';
+                      el.style.setProperty('background-color', '#000000', 'important');
+                      el.style.setProperty('background', '#000000', 'important');
+                      el.style.setProperty('background-image', 'none', 'important');
+                    }
+                  });
+                  
+                  // Also target specific avatar classes
+                  const avatars = document.querySelectorAll('[class*="avatar"], [class*="Avatar"], .cl-userButtonAvatarBox, .cl-avatarBox');
+                  avatars.forEach(avatar => {
+                    avatar.style.backgroundColor = '#000000';
+                    avatar.style.background = '#000000';
+                    avatar.style.backgroundImage = 'none';
+                    avatar.style.setProperty('background-color', '#000000', 'important');
+                    avatar.style.setProperty('background', '#000000', 'important');
+                    avatar.style.setProperty('background-image', 'none', 'important');
+                    // Target all children
+                    const children = avatar.querySelectorAll('*');
+                    children.forEach(child => {
+                      child.style.backgroundColor = '#000000';
+                      child.style.background = '#000000';
+                      child.style.backgroundImage = 'none';
+                      child.style.setProperty('background-color', '#000000', 'important');
+                      child.style.setProperty('background', '#000000', 'important');
+                      child.style.setProperty('background-image', 'none', 'important');
+                    });
+                  });
+                  
+                  // Remove the black square background behind the avatar
+                  const allElementsForSquare = document.querySelectorAll('*');
+                  allElementsForSquare.forEach(el => {
+                    const computedStyle = window.getComputedStyle(el);
+                    // Look for square elements that might be behind the avatar
+                    const isSquare = !computedStyle.borderRadius.includes('50%') && !computedStyle.borderRadius.includes('100%');
+                    const hasBlackBackground = computedStyle.backgroundColor === 'rgb(0, 0, 0)' || computedStyle.backgroundColor === 'rgba(0, 0, 0, 1)';
+                    const hasChildWithAvatar = el.querySelector('[class*="avatar"], [class*="Avatar"]');
+                    
+                    if (isSquare && hasBlackBackground && hasChildWithAvatar) {
+                      el.style.backgroundColor = 'transparent';
+                      el.style.background = 'transparent';
+                      el.style.setProperty('background-color', 'transparent', 'important');
+                      el.style.setProperty('background', 'transparent', 'important');
+                    }
+                  });
+                }
+
+                function hideLastUsedText() {
+                  // Find and hide only "Last used" text
+                  const allElements = document.querySelectorAll('*');
+                  allElements.forEach(el => {
+                    if (el.textContent && el.textContent.trim() === 'Last used') {
+                      el.style.display = 'none';
+                      el.style.visibility = 'hidden';
+                      el.style.opacity = '0';
+                      el.style.height = '0';
+                      el.style.overflow = 'hidden';
+                    }
+                  });
+                }
+
+                // Run immediately and on intervals
+                forceAvatarBlack();
+                hideLastUsedText();
+                setInterval(forceAvatarBlack, 500);
+                setInterval(hideLastUsedText, 500);
+                
+                // Run when DOM changes
+                const observer = new MutationObserver(() => {
+                  forceAvatarBlack();
+                  hideLastUsedText();
+                });
+                observer.observe(document.body, { childList: true, subtree: true });
+              }
+            `,
+          }}
+        />
+
       </head>
       <body
         className="antialiased font-sans"

@@ -47,11 +47,20 @@ interface SimplePayPalCheckoutProps {
 export default function SimplePayPalCheckout({ selectedPackage, showNotification, onPaymentSuccess, onboardingFormData }: SimplePayPalCheckoutProps) {
     const [showForm, setShowForm] = useState(false);
     const [formData, setFormData] = useState({});
+    const [isPayPalLoaded, setIsPayPalLoaded] = useState(false);
+    const [payPalError, setPayPalError] = useState<string | null>(null);
 
     // Debug: Check if PayPal client ID is available
     useEffect(() => {
         console.log('PayPal Client ID:', process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID);
         console.log('PayPal Client ID exists:', !!process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID);
+
+        // Set a timeout to show PayPal buttons even if script takes time to load
+        const timer = setTimeout(() => {
+            setIsPayPalLoaded(true);
+        }, 1000);
+
+        return () => clearTimeout(timer);
     }, []);
     const handleNotification = (type: 'success' | 'error' | 'info', message: string) => {
         if (showNotification) {
@@ -189,7 +198,12 @@ export default function SimplePayPalCheckout({ selectedPackage, showNotification
                 <div className="space-y-3">
                     <style dangerouslySetInnerHTML={{ __html: paypalStyles }} />
                     <div className="paypal-button-container">
-                        {(process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "Aa3Qhzd--_8MNtB9U8LctWUzDXw3eO7XPw2cyHUzwa9e_sYlD1pXnQK_K3iXNIXD2i64F8AUfPiWL-AT") ? (
+                        {!isPayPalLoaded ? (
+                            <div className="text-center p-6 bg-white/5 border border-white/10 rounded-lg">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#d4ae36] mx-auto mb-3"></div>
+                                <p className="text-white/70 text-sm">Loading payment options...</p>
+                            </div>
+                        ) : (process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "Aa3Qhzd--_8MNtB9U8LctWUzDXw3eO7XPw2cyHUzwa9e_sYlD1pXnQK_K3iXNIXD2i64F8AUfPiWL-AT") ? (
                             <PayPalScriptProvider
                                 options={{
                                     clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "Aa3Qhzd--_8MNtB9U8LctWUzDXw3eO7XPw2cyHUzwa9e_sYlD1pXnQK_K3iXNIXD2i64F8AUfPiWL-AT",
@@ -255,6 +269,7 @@ export default function SimplePayPalCheckout({ selectedPackage, showNotification
                                     }}
                                     onError={(err) => {
                                         console.error("PayPal error:", err);
+                                        setPayPalError("PayPal error: " + JSON.stringify(err));
                                         handleNotification("error", "PayPal error: " + JSON.stringify(err));
                                     }}
                                     onCancel={(data) => {
@@ -271,6 +286,12 @@ export default function SimplePayPalCheckout({ selectedPackage, showNotification
                                 <p className="text-red-300 text-xs mt-1">
                                     Client ID: Missing - Using fallback
                                 </p>
+                            </div>
+                        )}
+
+                        {payPalError && (
+                            <div className="text-center p-4 bg-red-500/10 border border-red-500/20 rounded-lg mt-3">
+                                <p className="text-red-400 text-sm">{payPalError}</p>
                             </div>
                         )}
                     </div>

@@ -2,14 +2,46 @@
 
 export default function DatingPlatformsSection() {
     const platforms = [
-        { name: "Tinder" },
-        { name: "Bumble" },
-        { name: "Hinge" },
-        { name: "OkCupid" },
-        { name: "Coffee Meets Bagel" },
-        { name: "Happn" },
-        { name: "Match" },
-        { name: "eHarmony" },
+        {
+            name: "Instagram",
+            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/1200px-Instagram_logo_2016.svg.png"
+        },
+        {
+            name: "Facebook",
+            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1200px-Facebook_Logo_%282019%29.png"
+        },
+        {
+            name: "LinkedIn",
+            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/LinkedIn_logo_initials.png/1200px-LinkedIn_logo_initials.png"
+        },
+        {
+            name: "X",
+            logo: "https://abs.twimg.com/favicons/twitter.3.ico"
+        },
+        {
+            name: "TikTok",
+            logo: "https://upload.wikimedia.org/wikipedia/en/thumb/a/a9/TikTok_logo.svg/1200px-TikTok_logo.svg.png"
+        },
+        {
+            name: "YouTube",
+            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/1200px-YouTube_full-color_icon_%282017%29.svg.png"
+        },
+        {
+            name: "Snapchat",
+            logo: "https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/Snapchat_logo.svg/1200px-Snapchat_logo.svg.png"
+        },
+        {
+            name: "Pinterest",
+            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Pinterest-logo.png/1200px-Pinterest-logo.png"
+        },
+        {
+            name: "WhatsApp",
+            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/1200px-WhatsApp.svg.png"
+        },
+        {
+            name: "Discord",
+            logo: "https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png"
+        },
     ];
 
     return (
@@ -21,16 +53,18 @@ export default function DatingPlatformsSection() {
 
                 <div className="relative overflow-hidden">
                     {/* Scrolling container */}
-                    <div className="flex animate-scroll space-x-12 items-center">
+                    <div className="flex animate-scroll space-x-20 items-center">
                         {/* First set of platforms */}
                         {platforms.map((platform, index) => (
                             <div
                                 key={`first-${index}`}
-                                className="flex-shrink-0 flex items-center text-white/60 hover:text-white/80 transition-colors duration-300"
+                                className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity duration-300"
                             >
-                                <span className="text-xl font-semibold whitespace-nowrap">
-                                    {platform.name}
-                                </span>
+                                <img
+                                    src={platform.logo}
+                                    alt={platform.name}
+                                    className="h-8 w-auto object-contain"
+                                />
                             </div>
                         ))}
 
@@ -38,11 +72,13 @@ export default function DatingPlatformsSection() {
                         {platforms.map((platform, index) => (
                             <div
                                 key={`second-${index}`}
-                                className="flex-shrink-0 flex items-center text-white/60 hover:text-white/80 transition-colors duration-300"
+                                className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity duration-300"
                             >
-                                <span className="text-xl font-semibold whitespace-nowrap">
-                                    {platform.name}
-                                </span>
+                                <img
+                                    src={platform.logo}
+                                    alt={platform.name}
+                                    className="h-8 w-auto object-contain"
+                                />
                             </div>
                         ))}
 
@@ -50,11 +86,13 @@ export default function DatingPlatformsSection() {
                         {platforms.map((platform, index) => (
                             <div
                                 key={`third-${index}`}
-                                className="flex-shrink-0 flex items-center text-white/60 hover:text-white/80 transition-colors duration-300"
+                                className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity duration-300"
                             >
-                                <span className="text-xl font-semibold whitespace-nowrap">
-                                    {platform.name}
-                                </span>
+                                <img
+                                    src={platform.logo}
+                                    alt={platform.name}
+                                    className="h-8 w-auto object-contain"
+                                />
                             </div>
                         ))}
 
@@ -62,11 +100,13 @@ export default function DatingPlatformsSection() {
                         {platforms.map((platform, index) => (
                             <div
                                 key={`fourth-${index}`}
-                                className="flex-shrink-0 flex items-center text-white/60 hover:text-white/80 transition-colors duration-300"
+                                className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity duration-300"
                             >
-                                <span className="text-xl font-semibold whitespace-nowrap">
-                                    {platform.name}
-                                </span>
+                                <img
+                                    src={platform.logo}
+                                    alt={platform.name}
+                                    className="h-8 w-auto object-contain"
+                                />
                             </div>
                         ))}
                     </div>
