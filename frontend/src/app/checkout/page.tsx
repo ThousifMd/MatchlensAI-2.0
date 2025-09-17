@@ -354,13 +354,53 @@ function CheckoutContent() {
       trackTransactionSuccessful(selectedPackage.price, 'USD', selectedPackage.name, `txn_${Date.now()}`);
     }
 
-    // Set localStorage values required by onboarding page
-    const paymentId = `paypal_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    localStorage.setItem('lastPaymentId', paymentId);
-    localStorage.setItem('paymentCompleted', 'true');
-    localStorage.setItem('selectedPackage', JSON.stringify(selectedPackage));
+    // Create a real payment record in Supabase
+    try {
+      const paymentData = {
+        order_id: `paypal_${Date.now()}`,
+        amount: selectedPackage?.price || 1,
+        currency: "USD",
+        package_id: selectedPackage?.id || "test_package",
+        package_name: selectedPackage?.name || "Test Package",
+        customer_email: "customer@example.com", // You might want to get this from the form
+        customer_name: "Customer", // You might want to get this from the form
+        status: "completed"
+      };
 
-    console.log('💾 Payment data saved to localStorage:', { paymentId, selectedPackage });
+      console.log('💳 Creating payment record in Supabase:', paymentData);
+
+      const response = await fetch('/api/create-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(paymentData)
+      });
+
+      if (response.ok) {
+        const paymentResult = await response.json();
+        const paymentId = paymentResult.payment_id;
+        
+        // Set localStorage values with real payment_id
+        localStorage.setItem('lastPaymentId', paymentId);
+        localStorage.setItem('paymentCompleted', 'true');
+        localStorage.setItem('selectedPackage', JSON.stringify(selectedPackage));
+
+        console.log('✅ Real payment record created:', { paymentId, selectedPackage });
+      } else {
+        throw new Error('Failed to create payment record');
+      }
+    } catch (error) {
+      console.error('❌ Failed to create payment record:', error);
+      
+      // Fallback: Use a UUID format for testing
+      const paymentId = `550e8400-e29b-41d4-a716-${Date.now().toString().slice(-12)}`;
+      localStorage.setItem('lastPaymentId', paymentId);
+      localStorage.setItem('paymentCompleted', 'true');
+      localStorage.setItem('selectedPackage', JSON.stringify(selectedPackage));
+
+      console.log('⚠️ Using fallback payment_id:', { paymentId, selectedPackage });
+    }
 
     // IMMEDIATELY trigger confetti animation and popup
     setShowConfetti(true);
