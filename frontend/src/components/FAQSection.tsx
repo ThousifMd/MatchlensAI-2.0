@@ -12,7 +12,7 @@ interface FAQItem {
 const faqData: FAQItem[] = [
     {
         question: "How long until I see results?",
-        answer: "Photos delivered in 24 hours. Most users report increased matches within 48 hours of updating their profile. Average increase: 3-5x matches in first week."
+        answer: "Photos delivered in 24 hours. Most users report increased engagement within 48 hours of updating their profile. Average increase: 3-5x attention in first week."
     },
     {
         question: "What if I don't have good photos?",
@@ -36,7 +36,7 @@ const faqData: FAQItem[] = [
     },
     {
         question: "Does this work for any social media platform?",
-        answer: "Yes. We optimize for all major dating apps. Each has slightly different strategies we account for."
+        answer: "Yes. We optimize for all major social media platforms. Each has slightly different strategies we account for."
     },
     {
         question: "I'm not photogenic. Will this work?",
@@ -44,7 +44,7 @@ const faqData: FAQItem[] = [
     },
     {
         question: "Why can't I just use a headshot generator and ChatGPT for my bio?",
-        answer: "You absolutely can - if you want to look exactly like every other guy using AI tools. Here's the difference: Generic AI creates that obvious 'AI look' that women spot instantly. Matchlens provides real photo enhancement that looks natural, plus bio optimization based on what actually works in your specific city/age/app. HeadshotPro gives everyone the same corporate headshot style. ChatGPT writes the same generic 'loves adventures and tacos' bio. We analyze what's working NOW on dating apps and customize specifically for you. Plus, everything's done in 24 hours instead of you spending days trying different tools. Short version: DIY = 5 hours and obvious AI results. Us = 24 hours and results that actually convert to dates."
+        answer: "You absolutely can - if you want to look exactly like every other guy using AI tools. Here's the difference: Generic AI creates that obvious 'AI look' that people spot instantly. Matchlens provides real photo enhancement that looks natural, plus bio optimization based on what actually works in your specific city/age/platform. HeadshotPro gives everyone the same corporate headshot style. ChatGPT writes the same generic 'loves adventures and tacos' bio. We analyze what's working NOW on social media platforms and customize specifically for you. Plus, everything's done in 24 hours instead of you spending days trying different tools. Short version: DIY = 5 hours and obvious AI results. Us = 24 hours and results that actually convert to meaningful connections."
     }
 ];
 

@@ -11,7 +11,13 @@ interface HeroSectionProps {
 export default function HeroSection({ ctaHref, className }: HeroSectionProps) {
   const handleCTA = () => {
     trackCTAClick("Make Me A Match Magnet", "Hero Section");
-    document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' });
+    const pricingSection = document.getElementById('pricing-section');
+    if (pricingSection) {
+      const elementRect = pricingSection.getBoundingClientRect();
+      const absoluteElementTop = elementRect.top + window.pageYOffset;
+      const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
+      window.scrollTo({ top: middle, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -33,9 +39,9 @@ export default function HeroSection({ ctaHref, className }: HeroSectionProps) {
         <p className="text-lg md:text-xl text-white max-w-3xl mb-8 md:mb-8 leading-relaxed mx-auto md:mx-0 px-4 md:px-0">
           <span className="md:hidden block space-y-4">
             <span className="block text-[#d4ae36] font-bold">Your photos are holding you back – <span className="font-semibold">not you</span>.</span>
-            <span className="block">We create <span className="font-semibold">ultra-realistic photos</span> that make you <span className="font-semibold">impossible to ignore</span>. Get <span className="font-semibold">3X more connections</span> in <span className="font-semibold">24 hours</span>.</span>
+            <span className="block">We create <span className="font-semibold">ultra-realistic photos</span> that make you <span className="font-semibold">impossible to ignore</span>. Get <span className="font-semibold">3X more attention</span> in <span className="font-semibold">24 hours</span>.</span>
           </span>
-          <span className="hidden md:inline">Your photos are holding you back – not you. We create ultra-realistic photos that make you impossible to ignore. Get 3X more connections in 24 hours.</span>
+          <span className="hidden md:inline">Your photos are holding you back – not you. We create ultra-realistic photos that make you impossible to ignore. Get 3X more attention in 24 hours.</span>
         </p>
 
         {/* CTA Button */}
@@ -43,7 +49,7 @@ export default function HeroSection({ ctaHref, className }: HeroSectionProps) {
           <button
             type="button"
             onClick={handleCTA}
-            className="relative h-auto min-h-[52px] md:min-h-[48px] px-6 md:px-8 py-4 md:py-3 rounded-lg font-semibold text-base md:text-lg bg-white/5 backdrop-blur-md border border-white/20 hover:bg-white/10 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#FFD700]/20 overflow-hidden group touch-manipulation w-full md:w-auto"
+            className="relative h-auto min-h-[56px] md:min-h-[52px] px-8 md:px-10 py-4 md:py-3 rounded-lg font-semibold text-base md:text-lg bg-white/5 backdrop-blur-md border border-white/20 hover:bg-white/10 active:bg-white/15 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#FFD700]/20 overflow-hidden group touch-manipulation w-full md:w-auto min-w-[200px] md:min-w-[240px] cta-button"
             aria-label="Upgrade my photos"
           >
             {/* Glass morphism background with flowing colors */}

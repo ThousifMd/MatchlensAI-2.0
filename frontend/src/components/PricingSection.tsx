@@ -55,7 +55,7 @@ const pricingTiers = [
     originalPrice: 199,
     discount: "Save 51%",
     description: "Ultimate transformation",
-    benefit: "Full profile makeover so you're ready for real dates, not just swipes.",
+    benefit: "Complete transformation so you're ready for meaningful connections, not just likes.",
     features: [
       "20 enhanced photos",
       "10 style variations",

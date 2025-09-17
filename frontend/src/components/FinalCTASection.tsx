@@ -8,7 +8,13 @@ export const FinalCTASection: React.FC = () => {
     const router = useRouter();
 
     const handleCTAClick = () => {
-        document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' });
+        const pricingSection = document.getElementById('pricing-section');
+        if (pricingSection) {
+            const elementRect = pricingSection.getBoundingClientRect();
+            const absoluteElementTop = elementRect.top + window.pageYOffset;
+            const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
+            window.scrollTo({ top: middle, behavior: 'smooth' });
+        }
     };
 
     return (

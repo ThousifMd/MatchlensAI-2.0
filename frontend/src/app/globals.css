@@ -1345,4 +1345,70 @@ color utility to any element that depends on these defaults.
     .logo-text-hover-animation:hover {
         animation: logoTextHover 0.5s ease-out forwards;
     }
+
+    /* Safari-specific fixes */
+    @supports (-webkit-appearance: none) {
+
+        /* Fix for Safari backdrop-blur issues */
+        .backdrop-blur-md {
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+        }
+
+        .backdrop-blur-lg {
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+        }
+
+        .backdrop-blur-sm {
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+        }
+
+        /* Fix for Safari touch targets */
+        button,
+        [role="button"] {
+            -webkit-tap-highlight-color: rgba(212, 174, 54, 0.2);
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Fix for Safari image loading */
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+        }
+
+        /* Fix for Safari gradient text */
+        .bg-clip-text {
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        /* Fix for Safari transform3d acceleration */
+        .transform-gpu {
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+    /* Enhanced touch targets for mobile */
+    @media (max-width: 768px) {
+
+        button,
+        [role="button"] {
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        /* Larger touch targets for important CTAs */
+        .cta-button {
+            min-height: 56px;
+            padding: 16px 24px;
+        }
+    }
 }

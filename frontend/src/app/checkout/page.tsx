@@ -89,7 +89,7 @@ const testimonials = [
   {
     name: "Mike R.",
     image: "/images/s8.jpg",
-    quote: "Amazing results! The professional package transformed my dating profile completely.",
+    quote: "Amazing results! The professional package transformed my attention profile completely.",
     rating: 5,
   },
   {

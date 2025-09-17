@@ -20,13 +20,13 @@ const processSteps = [
         icon: <Zap className="w-5 h-5" />,
         number: "03",
         title: "AI + Expert Optimization",
-        description: "We create ultra realistic AI photos of you and enhance your profile that 3x your matches."
+        description: "We create ultra realistic AI photos of you and enhance your profile that 3x your attention."
     },
     {
         icon: <Clock className="w-5 h-5" />,
         number: "04",
         title: "24-Hour Delivery",
-        description: "Receive 20-100 swipe-worthy photos and a polished profile ready for any dating app."
+        description: "Receive attention worthy photos and polished bio ready for any social media platform."
     }
 ];
 
@@ -43,7 +43,7 @@ export const SimpleProcessSection: React.FC = () => {
                         From Selfie to Success
                     </h2>
                     <p className="text-xl text-white/80 max-w-2xl mx-auto">
-                        We turn your basic selfies into profiles that actually get matches (yes, it's possible)
+                        We turn your basic selfies into profiles that actually get 3X attention (yes, it's possible)
                     </p>
                 </div>
 

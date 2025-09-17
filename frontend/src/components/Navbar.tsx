@@ -72,10 +72,16 @@ export default function Navbar({ ctaHref, className }: NavbarProps) {
               <>
                 {/* CTA Button - show for all users */}
                 <button
-                  className="inline-flex items-center px-5 py-2 bg-transparent backdrop-blur-sm border border-[#FFD700]/40 rounded-lg font-medium hover:border-[#FFD700]/60 hover:bg-transparent transition-all duration-300"
+                  className="inline-flex items-center px-6 py-3 bg-transparent backdrop-blur-sm border border-[#FFD700]/40 rounded-lg font-medium hover:border-[#FFD700]/60 hover:bg-transparent active:bg-[#FFD700]/5 transition-all duration-300 touch-manipulation min-h-[44px]"
                   onClick={() => {
                     trackCTAClick("Join the Top 5%", "Navbar Desktop");
-                    document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' });
+                    const pricingSection = document.getElementById('pricing-section');
+                    if (pricingSection) {
+                      const elementRect = pricingSection.getBoundingClientRect();
+                      const absoluteElementTop = elementRect.top + window.pageYOffset;
+                      const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
+                      window.scrollTo({ top: middle, behavior: 'smooth' });
+                    }
                   }}
                 >
                   <span className="bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FFD700] bg-clip-text text-transparent">
@@ -97,10 +103,16 @@ export default function Navbar({ ctaHref, className }: NavbarProps) {
             ) : (
               /* Fallback CTA when Clerk is not configured */
               <button
-                className="inline-flex items-center px-5 py-2 bg-transparent backdrop-blur-sm border border-[#FFD700]/40 rounded-lg font-medium hover:border-[#FFD700]/60 hover:bg-transparent transition-all duration-300"
+                className="inline-flex items-center px-6 py-3 bg-transparent backdrop-blur-sm border border-[#FFD700]/40 rounded-lg font-medium hover:border-[#FFD700]/60 hover:bg-transparent active:bg-[#FFD700]/5 transition-all duration-300 touch-manipulation min-h-[44px]"
                 onClick={() => {
                   trackCTAClick("Join the Top 5%", "Navbar Desktop");
-                  document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' });
+                  const pricingSection = document.getElementById('pricing-section');
+                  if (pricingSection) {
+                    const elementRect = pricingSection.getBoundingClientRect();
+                    const absoluteElementTop = elementRect.top + window.pageYOffset;
+                    const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
+                    window.scrollTo({ top: middle, behavior: 'smooth' });
+                  }
                 }}
               >
                 <span className="bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FFD700] bg-clip-text text-transparent">
@@ -126,9 +138,8 @@ function Brand({ isLoaded }: { isLoaded: boolean }) {
         ? 'opacity-100 translate-y-0 scale-100'
         : 'opacity-0 translate-y-[-20px] scale-95'
         }`}>
-        {/* Heart/Lens Icon with Sharp 3D effects */}
-        <div className={`w-10 h-10 md:w-12 md:h-12 flex items-center justify-center relative ${isLoaded ? 'animate-logo-icon-entrance' : ''}`}>
-          {/* Sharp 3D Shadow Layer */}
+        {/* Heart/Lens Icon with Sharp 3D effects - HIDDEN */}
+        {/* <div className={`w-10 h-10 md:w-12 md:h-12 flex items-center justify-center relative ${isLoaded ? 'animate-logo-icon-entrance' : ''}`}>
           <svg
             viewBox="0 0 24 24"
             className="absolute w-10 h-10 md:w-12 md:h-12 fill-none stroke-[2.5]"
@@ -150,7 +161,6 @@ function Brand({ isLoaded }: { isLoaded: boolean }) {
             />
           </svg>
 
-          {/* Main Sharp 3D Icon */}
           <svg
             viewBox="0 0 24 24"
             className="relative w-10 h-10 md:w-12 md:h-12 fill-none stroke-[2.5] transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 group-hover:-translate-y-0.5"
@@ -179,9 +189,8 @@ function Brand({ isLoaded }: { isLoaded: boolean }) {
             />
           </svg>
 
-          {/* Sharp Highlight */}
           <div className="absolute top-0.5 left-0.5 w-1.5 h-1.5 bg-white/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        </div>
+        </div> */}
 
         {/* Main Text */}
         <span className={`font-heading text-2xl md:text-3xl font-bold tracking-tight bg-gradient-to-r from-[#d4ae36] via-white to-[#FD5E76] bg-clip-text text-transparent transition-all duration-300 drop-shadow-lg ${isLoaded ? 'animate-logo-text-entrance' : ''}`}

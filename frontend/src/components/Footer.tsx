@@ -57,11 +57,10 @@ export default function Footer({
               className="group inline-flex items-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700]"
             >
               <div className="transition-all duration-700 group-hover:scale-105 group-hover:-translate-y-0.5">
-                {/* Logo and Main Text Row */}
-                <div className="flex items-center gap-3 mb-1">
-                  {/* Heart/Lens Icon with Sharp 3D effects */}
-                  <div className="w-8 h-8 flex items-center justify-center relative">
-                    {/* Sharp 3D Shadow Layer */}
+                {/* Branding Section */}
+                <div className="flex flex-col">
+                  {/* Heart/Lens Icon with Sharp 3D effects - HIDDEN */}
+                  {/* <div className="w-8 h-8 flex items-center justify-center relative">
                     <svg
                       viewBox="0 0 24 24"
                       className="absolute w-8 h-8 fill-none stroke-[2.5]"
@@ -83,7 +82,6 @@ export default function Footer({
                       />
                     </svg>
 
-                    {/* Main Sharp 3D Icon */}
                     <svg
                       viewBox="0 0 24 24"
                       className="relative w-8 h-8 fill-none stroke-[2.5] transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 group-hover:-translate-y-0.5"
@@ -112,9 +110,8 @@ export default function Footer({
                       />
                     </svg>
 
-                    {/* Sharp Highlight */}
                     <div className="absolute top-0.5 left-0.5 w-1.5 h-1.5 bg-white/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  </div>
+                  </div> */}
 
                   {/* Main Text */}
                   <span className="font-heading text-lg font-bold tracking-tight bg-gradient-to-r from-[#d4ae36] via-white to-[#FD5E76] bg-clip-text text-transparent transition-all duration-300 drop-shadow-lg"
@@ -123,15 +120,15 @@ export default function Footer({
                     }}>
                     Matchlens AI
                   </span>
-                </div>
 
-                {/* Tagline */}
-                <p className="m-0 text-sm bg-gradient-to-r from-[#d4ae36] via-white to-[#FD5E76] bg-clip-text text-transparent drop-shadow-lg ml-11"
-                  style={{
-                    textShadow: '0 0 20px rgba(212, 174, 54, 0.3), 0 0 40px rgba(253, 94, 118, 0.2)'
-                  }}>
-                  The lens between ignored and irresistible
-                </p>
+                  {/* Tagline */}
+                  <p className="m-0 text-sm bg-gradient-to-r from-[#d4ae36] via-white to-[#FD5E76] bg-clip-text text-transparent drop-shadow-lg"
+                    style={{
+                      textShadow: '0 0 20px rgba(212, 174, 54, 0.3), 0 0 40px rgba(253, 94, 118, 0.2)'
+                    }}>
+                    The lens between ignored and irresistible
+                  </p>
+                </div>
               </div>
             </Link>
 

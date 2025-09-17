@@ -12,6 +12,17 @@ export const MobileStickyCTA: React.FC<MobileStickyCTAProps> = ({
     href,
     customersCount
 }) => {
+    const handleCTAClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        const pricingSection = document.getElementById('pricing-section');
+        if (pricingSection) {
+            const elementRect = pricingSection.getBoundingClientRect();
+            const absoluteElementTop = elementRect.top + window.pageYOffset;
+            const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
+            window.scrollTo({ top: middle, behavior: 'smooth' });
+        }
+    };
+
     return (
         <>
             {/* Mobile Sticky CTA - Only visible on mobile */}
@@ -22,23 +33,23 @@ export const MobileStickyCTA: React.FC<MobileStickyCTAProps> = ({
                         <div className="w-full h-full bg-black/90 backdrop-blur-lg rounded-t-2xl"></div>
                     </div>
 
-                    <a
-                        href={href}
-                        className="relative block w-full z-10"
+                    <button
+                        onClick={handleCTAClick}
+                        className="relative block w-full z-10 touch-manipulation min-h-[56px] active:scale-95 transition-transform duration-150 cta-button"
                     >
                         <div className="flex flex-col items-center justify-center text-center">
                             <div className="flex items-center gap-2 font-bold text-lg mb-1 bg-gradient-to-r from-[#d4ae36] via-white to-[#FD5E76] bg-clip-text text-transparent"
                                 style={{
                                     textShadow: '0 0 25px rgba(212, 174, 54, 0.4), 0 0 50px rgba(253, 94, 118, 0.3)'
                                 }}>
-                                <span>Transform my profile now</span>
+                                <span>Transform my photos now</span>
                                 <ArrowRight className="w-5 h-5 text-[#d4ae36]" />
                             </div>
                             <div className="text-white/90 text-xs">
-                                Join {customersCount.toLocaleString()} men who upgraded their profiles.
+                                Join {customersCount.toLocaleString()} men who upgraded their photos.
                             </div>
                         </div>
-                    </a>
+                    </button>
                 </div>
             </div>
 

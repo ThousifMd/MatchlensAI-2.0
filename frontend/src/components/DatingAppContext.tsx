@@ -33,7 +33,7 @@ const DatingAppCard: React.FC<DatingAppCardProps> = ({
     const beforeImgRef = useRef<HTMLImageElement>(null);
     const afterImgRef = useRef<HTMLImageElement>(null);
 
-    // Preload both images
+    // Preload both images with fallback
     useEffect(() => {
         const preloadImage = (src: string, type: 'before' | 'after') => {
             const img = new Image();
@@ -42,12 +42,21 @@ const DatingAppCard: React.FC<DatingAppCardProps> = ({
             };
             img.onerror = () => {
                 console.warn(`Failed to load ${type} image:`, src);
+                // Set as loaded even if failed to prevent infinite loading
+                setImagesLoaded(prev => ({ ...prev, [type]: true }));
             };
             img.src = src;
         };
 
+        // Set a timeout to prevent infinite loading
+        const timeout = setTimeout(() => {
+            setImagesLoaded({ before: true, after: true });
+        }, 3000);
+
         preloadImage(beforeImage, 'before');
         preloadImage(afterImage, 'after');
+
+        return () => clearTimeout(timeout);
     }, [beforeImage, afterImage]);
 
     const handleTabChange = (newActiveTab: 'before' | 'after') => {

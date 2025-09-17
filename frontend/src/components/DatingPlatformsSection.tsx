@@ -19,10 +19,6 @@ export default function DatingPlatformsSection() {
             logo: "https://abs.twimg.com/favicons/twitter.3.ico"
         },
         {
-            name: "TikTok",
-            logo: "https://upload.wikimedia.org/wikipedia/en/thumb/a/a9/TikTok_logo.svg/1200px-TikTok_logo.svg.png"
-        },
-        {
             name: "YouTube",
             logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/1200px-YouTube_full-color_icon_%282017%29.svg.png"
         },
@@ -60,11 +56,17 @@ export default function DatingPlatformsSection() {
                                 key={`first-${index}`}
                                 className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity duration-300"
                             >
-                                <img
-                                    src={platform.logo}
-                                    alt={platform.name}
-                                    className="h-8 w-auto object-contain"
-                                />
+                                {platform.logo.startsWith('http') ? (
+                                    <img
+                                        src={platform.logo}
+                                        alt={platform.name}
+                                        className={`h-8 w-auto object-contain ${platform.name === 'TikTok' ? 'brightness-0 invert' : ''}`}
+                                    />
+                                ) : (
+                                    <span className="text-white font-bold text-lg">
+                                        {platform.logo}
+                                    </span>
+                                )}
                             </div>
                         ))}
 
@@ -74,11 +76,17 @@ export default function DatingPlatformsSection() {
                                 key={`second-${index}`}
                                 className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity duration-300"
                             >
-                                <img
-                                    src={platform.logo}
-                                    alt={platform.name}
-                                    className="h-8 w-auto object-contain"
-                                />
+                                {platform.logo.startsWith('http') ? (
+                                    <img
+                                        src={platform.logo}
+                                        alt={platform.name}
+                                        className={`h-8 w-auto object-contain ${platform.name === 'TikTok' ? 'brightness-0 invert' : ''}`}
+                                    />
+                                ) : (
+                                    <span className="text-white font-bold text-lg">
+                                        {platform.logo}
+                                    </span>
+                                )}
                             </div>
                         ))}
 
@@ -88,11 +96,17 @@ export default function DatingPlatformsSection() {
                                 key={`third-${index}`}
                                 className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity duration-300"
                             >
-                                <img
-                                    src={platform.logo}
-                                    alt={platform.name}
-                                    className="h-8 w-auto object-contain"
-                                />
+                                {platform.logo.startsWith('http') ? (
+                                    <img
+                                        src={platform.logo}
+                                        alt={platform.name}
+                                        className={`h-8 w-auto object-contain ${platform.name === 'TikTok' ? 'brightness-0 invert' : ''}`}
+                                    />
+                                ) : (
+                                    <span className="text-white font-bold text-lg">
+                                        {platform.logo}
+                                    </span>
+                                )}
                             </div>
                         ))}
 
@@ -102,11 +116,17 @@ export default function DatingPlatformsSection() {
                                 key={`fourth-${index}`}
                                 className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity duration-300"
                             >
-                                <img
-                                    src={platform.logo}
-                                    alt={platform.name}
-                                    className="h-8 w-auto object-contain"
-                                />
+                                {platform.logo.startsWith('http') ? (
+                                    <img
+                                        src={platform.logo}
+                                        alt={platform.name}
+                                        className={`h-8 w-auto object-contain ${platform.name === 'TikTok' ? 'brightness-0 invert' : ''}`}
+                                    />
+                                ) : (
+                                    <span className="text-white font-bold text-lg">
+                                        {platform.logo}
+                                    </span>
+                                )}
                             </div>
                         ))}
                     </div>
