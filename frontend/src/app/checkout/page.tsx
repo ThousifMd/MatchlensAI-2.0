@@ -306,37 +306,19 @@ function CheckoutContent() {
     setTimeout(() => setNotification(null), 4000); // Auto-hide after 4 seconds
   };
 
-  // Load onboarding form data from localStorage
+  // Initialize empty onboarding form data
   useEffect(() => {
-    const storedFormData = localStorage.getItem('onboardingFormData');
-    if (storedFormData) {
-      try {
-        const parsedData = JSON.parse(storedFormData);
-        setOnboardingFormData(parsedData);
-        console.log('✅ CheckoutContent - Loaded form data:', parsedData);
-      } catch (error) {
-        console.error('❌ CheckoutContent - Error parsing form data:', error);
-      }
-    } else {
-      console.warn('❌ CheckoutContent - No form data found in localStorage');
-    }
+    // No localStorage usage - start with empty form data
+    setOnboardingFormData({});
   }, []);
 
 
-  // Use package from context or fallback to localStorage (client-side only)
+  // Package selection state (no localStorage usage)
   const [selectedPackage, setSelectedPackageState] = useState<Package | null>(null);
 
   useEffect(() => {
-    // Always use our local packages array with updated pricing
-    // This ensures we always show the correct pricing regardless of context
-    if (typeof window !== 'undefined') {
-      const packageId = localStorage.getItem('selectedPackage') || "most-matches";
-      const pkg = packages.find(p => p.id === packageId) || packages[1];
-      setSelectedPackageState(pkg);
-    } else {
-      // Default to most-matches package during SSR
-      setSelectedPackageState(packages[1]);
-    }
+    // Default to most-matches package (Most Attention - $69)
+    setSelectedPackageState(packages[1]);
   }, []);
 
   const handlePaymentSuccess = async (details?: any) => {
@@ -397,23 +379,11 @@ function CheckoutContent() {
 
       const paymentId = data.payment_id;
 
-      // Set localStorage values with real payment_id
-      localStorage.setItem('lastPaymentId', paymentId);
-      localStorage.setItem('paymentCompleted', 'true');
-      localStorage.setItem('selectedPackage', JSON.stringify(selectedPackage));
-
       console.log('✅ Real payment record created:', { paymentId, selectedPackage });
 
     } catch (error) {
       console.error('❌ Failed to create payment record:', error);
-
-      // Fallback: Use localStorage fallback in supabaseUtils
-      const paymentId = `local_${Date.now()}`;
-      localStorage.setItem('lastPaymentId', paymentId);
-      localStorage.setItem('paymentCompleted', 'true');
-      localStorage.setItem('selectedPackage', JSON.stringify(selectedPackage));
-
-      console.log('⚠️ Using localStorage fallback payment_id:', { paymentId, selectedPackage });
+      // Payment record creation failed, but continue with the flow
     }
 
     // Staggered animation sequence for smoother transition
@@ -664,7 +634,6 @@ function CheckoutContent() {
                     key={pkg.id}
                     onClick={() => {
                       setSelectedPackageState(pkg);
-                      localStorage.setItem('selectedPackage', pkg.id);
                       // Track package change
                       trackAddToCartCombined(pkg.name, pkg.price);
                     }}
