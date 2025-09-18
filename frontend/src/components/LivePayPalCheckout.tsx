@@ -20,7 +20,7 @@ export default function LivePayPalCheckout({
   onPaymentError,
   onPaymentCancel
 }: LivePayPalCheckoutProps) {
-  
+
   const paypalOptions = {
     clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!,
     currency: "USD",
@@ -31,13 +31,15 @@ export default function LivePayPalCheckout({
   };
 
   const createOrder = async (data: any, actions: any) => {
+    const amount = selectedPackage?.price || 69; // Default to $69 if no package selected
+
     return actions.order.create({
       purchase_units: [{
         amount: {
           currency_code: "USD",
-          value: "1.00"
+          value: amount.toString()
         },
-        description: "Matchlens AI Service - Test Payment"
+        description: `Matchlens AI Service - ${selectedPackage?.name || 'Most Attention'} Package`
       }]
     });
   };
@@ -66,8 +68,14 @@ export default function LivePayPalCheckout({
       <div className="text-center mb-4">
         <h3 className="text-lg font-semibold text-white mb-2">Complete Payment</h3>
         <p className="text-gray-300 text-sm">Secure payment powered by PayPal</p>
+        {selectedPackage && (
+          <div className="mt-3 p-3 bg-white/5 rounded-lg border border-white/10">
+            <p className="text-white font-medium">{selectedPackage.name}</p>
+            <p className="text-[#d4ae36] text-xl font-bold">${selectedPackage.price}</p>
+          </div>
+        )}
       </div>
-      
+
       <PayPalScriptProvider options={paypalOptions}>
         <PayPalButtons
           style={{
@@ -83,7 +91,7 @@ export default function LivePayPalCheckout({
           onCancel={onPaymentCancel}
         />
       </PayPalScriptProvider>
-      
+
       <div className="text-center mt-4">
         <p className="text-gray-400 text-xs">Powered by PayPal</p>
       </div>
