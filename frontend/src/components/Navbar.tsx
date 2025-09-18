@@ -4,6 +4,8 @@ import * as React from "react"
 import Link from "next/link"
 import { Sparkles } from "lucide-react"
 import { trackCTAClick } from "@/lib/metaPixel"
+import { trackCTAClickCombined, trackAddToCartCombined } from "@/lib/pixelTracking"
+import { usePackage } from "@/contexts/PackageContext"
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 
 // Check if Clerk is configured
@@ -27,6 +29,48 @@ const navItems: Array<{ label: string, href: string }> = []
 export default function Navbar({ ctaHref, className }: NavbarProps) {
   const [scrolled, setScrolled] = React.useState(false)
   const [isLoaded, setIsLoaded] = React.useState(false)
+  const { setSelectedPackage } = usePackage()
+
+  const handleCTAClick = () => {
+    // Track CTA click
+    trackCTAClickCombined("Join the Top 5%", "Navbar Desktop");
+    
+    // Auto-select the "Most Attention" package ($69)
+    const mostAttentionPackage = {
+      id: "most-matches",
+      name: "Most Attention",
+      price: 69,
+      originalPrice: 99,
+      description: "Most popular choice",
+      features: [
+        "10 enhanced photos",
+        "6 style variations",
+        "Bio optimization",
+        "Profile strategy guide",
+        "Private and secure"
+      ],
+      buttonText: "Make my profile irresistible",
+      popular: true,
+      mobileOrder: 1
+    };
+
+    setSelectedPackage(mostAttentionPackage);
+    
+    // Track package selection
+    trackAddToCartCombined("Most Attention", 69);
+    
+    // Store in localStorage for checkout page
+    localStorage.setItem('selectedPackage', 'most-matches');
+
+    // Scroll to pricing section
+    const pricingSection = document.getElementById('pricing-section');
+    if (pricingSection) {
+      const elementRect = pricingSection.getBoundingClientRect();
+      const absoluteElementTop = elementRect.top + window.pageYOffset;
+      const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
+      window.scrollTo({ top: middle, behavior: 'smooth' });
+    }
+  };
 
   React.useEffect(() => {
     const onScroll = () => {
@@ -73,16 +117,7 @@ export default function Navbar({ ctaHref, className }: NavbarProps) {
                 {/* CTA Button - show for all users */}
                 <button
                   className="inline-flex items-center px-6 py-3 bg-transparent backdrop-blur-sm border border-[#FFD700]/40 rounded-lg font-medium hover:border-[#FFD700]/60 hover:bg-transparent active:bg-[#FFD700]/5 transition-all duration-300 touch-manipulation min-h-[44px]"
-                  onClick={() => {
-                    trackCTAClick("Join the Top 5%", "Navbar Desktop");
-                    const pricingSection = document.getElementById('pricing-section');
-                    if (pricingSection) {
-                      const elementRect = pricingSection.getBoundingClientRect();
-                      const absoluteElementTop = elementRect.top + window.pageYOffset;
-                      const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
-                      window.scrollTo({ top: middle, behavior: 'smooth' });
-                    }
-                  }}
+                  onClick={handleCTAClick}
                 >
                   <span className="bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FFD700] bg-clip-text text-transparent">
                     Join the Top 5%
@@ -104,16 +139,7 @@ export default function Navbar({ ctaHref, className }: NavbarProps) {
               /* Fallback CTA when Clerk is not configured */
               <button
                 className="inline-flex items-center px-6 py-3 bg-transparent backdrop-blur-sm border border-[#FFD700]/40 rounded-lg font-medium hover:border-[#FFD700]/60 hover:bg-transparent active:bg-[#FFD700]/5 transition-all duration-300 touch-manipulation min-h-[44px]"
-                onClick={() => {
-                  trackCTAClick("Join the Top 5%", "Navbar Desktop");
-                  const pricingSection = document.getElementById('pricing-section');
-                  if (pricingSection) {
-                    const elementRect = pricingSection.getBoundingClientRect();
-                    const absoluteElementTop = elementRect.top + window.pageYOffset;
-                    const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
-                    window.scrollTo({ top: middle, behavior: 'smooth' });
-                  }
-                }}
+                onClick={handleCTAClick}
               >
                 <span className="bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FFD700] bg-clip-text text-transparent">
                   Join the Top 5%
