@@ -17,22 +17,23 @@ export default function AuthPage() {
             const userCreatedAt = new Date(user.createdAt);
             const now = new Date();
             const timeDiff = now.getTime() - userCreatedAt.getTime();
-            
+
             if (timeDiff < 30000) { // 30 seconds
                 console.log('🎉 New user sign-up detected, tracking registration event');
-                
-                // Track sign-up completion
+
+                // Track sign-up completion as CompleteRegistration event
                 const signUpData = {
                     user_id: user.id,
                     email: user.primaryEmailAddress?.emailAddress,
                     name: user.fullName,
                     signup_method: 'Clerk',
-                    signup_source: 'Auth Page'
+                    signup_source: 'Auth Page',
+                    event_type: 'sign_up'
                 };
-                
+
                 trackCompleteRegistration(signUpData);
                 trackRedditCompleteRegistration(signUpData);
-                
+
                 setHasTrackedSignUp(true);
             }
         }
@@ -49,6 +50,12 @@ export default function AuthPage() {
     const handleSignInClick = () => {
         // Track sign-in button click
         trackCTAClick("Sign In Button", "Auth Page");
+        // Track as CompleteRegistration event instead of Subscribed
+        trackCompleteRegistration({
+            sign_in_method: 'Clerk',
+            source: 'Auth Page',
+            event_type: 'sign_in'
+        });
         setIsSignUp(false);
     };
 
