@@ -32,6 +32,9 @@ export const FinalCTASection: React.FC = () => {
         };
 
         setSelectedPackage(mostAttentionPackage);
+        
+        // Store in localStorage for checkout page
+        localStorage.setItem('selectedPackage', 'most-matches');
 
         // Scroll to pricing section
         const pricingSection = document.getElementById('pricing-section');

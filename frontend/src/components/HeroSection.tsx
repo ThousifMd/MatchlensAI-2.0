@@ -37,6 +37,9 @@ export default function HeroSection({ ctaHref, className }: HeroSectionProps) {
     };
 
     setSelectedPackage(mostAttentionPackage);
+    
+    // Store in localStorage for checkout page
+    localStorage.setItem('selectedPackage', 'most-matches');
 
     // Scroll to pricing section
     const pricingSection = document.getElementById('pricing-section');

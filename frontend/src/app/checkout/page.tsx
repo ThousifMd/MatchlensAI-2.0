@@ -652,6 +652,43 @@ function CheckoutContent() {
               </CardContent>
             </Card>
 
+            {/* Package Selection */}
+            <Card className="bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl hover:bg-white/8 hover:border-white/20 transition-all duration-300 ease-out">
+              <CardHeader>
+                <CardTitle className="text-white text-lg">Change Package</CardTitle>
+                <p className="text-white/70 text-sm">Not the right package? Choose a different one below.</p>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {packages.map((pkg) => (
+                  <div
+                    key={pkg.id}
+                    onClick={() => {
+                      setSelectedPackageState(pkg);
+                      localStorage.setItem('selectedPackage', pkg.id);
+                    }}
+                    className={`p-3 rounded-lg border cursor-pointer transition-all duration-200 ${
+                      selectedPackage?.id === pkg.id
+                        ? 'border-[#d4ae36] bg-[#d4ae36]/10'
+                        : 'border-white/20 hover:border-white/40 hover:bg-white/5'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-white font-medium">{pkg.name}</h4>
+                        <p className="text-white/70 text-sm">
+                          {pkg.features.length} features • ${pkg.price}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-[#d4ae36] font-bold">${pkg.price}</div>
+                        <div className="text-white/50 text-sm line-through">${pkg.originalPrice}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
             {/* Trust Elements */}
             <Card className="bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl hover:bg-white/8 hover:border-white/20 transition-all duration-300 ease-out">
               <CardContent className="pt-6">
