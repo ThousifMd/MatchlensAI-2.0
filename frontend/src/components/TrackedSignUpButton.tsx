@@ -22,11 +22,11 @@ export default function TrackedSignUpButton({
         trackRedditLead(`${trackingSource} Sign Up`);
     };
 
-    return (
-        <div onClick={handleSignUpClick}>
-            <SignUpButton className={className}>
-                {children}
-            </SignUpButton>
-        </div>
-    );
+  return (
+    <div onClick={handleSignUpClick} className={className}>
+      <SignUpButton>
+        {children}
+      </SignUpButton>
+    </div>
+  );
 }

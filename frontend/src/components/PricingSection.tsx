@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, Shield } from "lucide-react";
 import { usePackage, Package } from "@/contexts/PackageContext";
-import { trackAddToCart, trackCTAClick } from "@/lib/metaPixel";
+import { trackAddToCart, trackCTAClick, trackLead } from "@/lib/metaPixel";
 import { useUser } from '@clerk/nextjs';
 import AuthModal from "./AuthModal";
 

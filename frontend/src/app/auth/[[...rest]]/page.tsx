@@ -12,15 +12,15 @@ export default function AuthPage() {
 
     // Track when user completes sign-up
     useEffect(() => {
-        if (isLoaded && user && !hasTrackedSignUp) {
+        if (isLoaded && user && !hasTrackedSignUp && user.createdAt) {
             // Check if this is a new user (created within last 30 seconds)
             const userCreatedAt = new Date(user.createdAt);
             const now = new Date();
             const timeDiff = now.getTime() - userCreatedAt.getTime();
-
+            
             if (timeDiff < 30000) { // 30 seconds
                 console.log('🎉 New user sign-up detected, tracking registration event');
-
+                
                 // Track sign-up completion
                 const signUpData = {
                     user_id: user.id,
@@ -29,10 +29,10 @@ export default function AuthPage() {
                     signup_method: 'Clerk',
                     signup_source: 'Auth Page'
                 };
-
+                
                 trackCompleteRegistration(signUpData);
                 trackRedditCompleteRegistration(signUpData);
-
+                
                 setHasTrackedSignUp(true);
             }
         }

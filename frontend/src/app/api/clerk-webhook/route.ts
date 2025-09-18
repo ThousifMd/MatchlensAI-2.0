@@ -30,18 +30,22 @@ export async function POST(request: NextRequest) {
             });
 
             // Track sign-up completion server-side
-            const signUpData = {
-                user_id: user.id,
-                email: user.email_addresses?.[0]?.email_address,
-                name: `${user.first_name} ${user.last_name}`.trim(),
-                signup_method: 'Clerk',
-                signup_source: 'Webhook',
-                created_at: user.created_at
+            const userData = {
+                em: user.email_addresses?.[0]?.email_address ? [user.email_addresses[0].email_address] : undefined,
+                ph: user.phone_numbers?.[0]?.phone_number ? [user.phone_numbers[0].phone_number] : undefined,
+                client_ip_address: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
+                client_user_agent: request.headers.get('user-agent') || 'unknown'
+            };
+
+            const customData = {
+                content_name: 'User Registration',
+                content_category: 'signup',
+                content_type: 'user'
             };
 
             // Track to Reddit server-side
             try {
-                await trackRedditCompleteRegistration(signUpData);
+                await trackRedditCompleteRegistration(userData, customData);
                 console.log('✅ Server-side sign-up tracking completed');
             } catch (error) {
                 console.error('❌ Server-side sign-up tracking failed:', error);
