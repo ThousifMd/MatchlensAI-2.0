@@ -22,7 +22,7 @@ import Link from "next/link";
 import { usePackage } from "@/contexts/PackageContext";
 import LivePayPalCheckout from "@/components/LivePayPalCheckout";
 import { UserButton, SignedIn, SignedOut } from '@clerk/nextjs';
-import { trackPurchaseCombinedFull } from "@/lib/pixelTracking";
+import { trackPurchaseCombinedFull, trackAddToCartCombined } from "@/lib/pixelTracking";
 
 // Dodo Payment Configuration
 const DODO_PAYMENT_URL = process.env.NEXT_PUBLIC_DODO_PAYMENT_URL || "https://api.dodo.com/payments";
@@ -665,6 +665,8 @@ function CheckoutContent() {
                     onClick={() => {
                       setSelectedPackageState(pkg);
                       localStorage.setItem('selectedPackage', pkg.id);
+                      // Track package change
+                      trackAddToCartCombined(pkg.name, pkg.price);
                     }}
                     className={`p-3 rounded-lg border cursor-pointer transition-all duration-200 ${
                       selectedPackage?.id === pkg.id

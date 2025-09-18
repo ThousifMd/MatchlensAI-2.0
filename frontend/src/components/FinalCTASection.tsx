@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { usePackage } from "@/contexts/PackageContext";
 import AuthModal from "./AuthModal";
+import { trackCTAClickCombined, trackAddToCartCombined } from "@/lib/pixelTracking";
 
 export const FinalCTASection: React.FC = () => {
     const router = useRouter();
@@ -12,6 +13,9 @@ export const FinalCTASection: React.FC = () => {
     const [showAuthModal, setShowAuthModal] = React.useState(false);
 
     const handleCTAClick = () => {
+        // Track CTA click
+        trackCTAClickCombined("Make Me A Match Magnet", "Final CTA Section");
+        
         // Auto-select the "Most Attention" package ($69)
         const mostAttentionPackage = {
             id: "most-matches",
@@ -32,6 +36,9 @@ export const FinalCTASection: React.FC = () => {
         };
 
         setSelectedPackage(mostAttentionPackage);
+        
+        // Track package selection
+        trackAddToCartCombined("Most Attention", 69);
         
         // Store in localStorage for checkout page
         localStorage.setItem('selectedPackage', 'most-matches');

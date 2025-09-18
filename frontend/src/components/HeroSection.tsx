@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { trackCTAClickCombined } from "@/lib/pixelTracking";
+import { trackCTAClickCombined, trackAddToCartCombined } from "@/lib/pixelTracking";
 import { usePackage } from "@/contexts/PackageContext";
 import AuthModal from "./AuthModal";
 
@@ -37,6 +37,9 @@ export default function HeroSection({ ctaHref, className }: HeroSectionProps) {
     };
 
     setSelectedPackage(mostAttentionPackage);
+    
+    // Track package selection
+    trackAddToCartCombined("Most Attention", 69);
     
     // Store in localStorage for checkout page
     localStorage.setItem('selectedPackage', 'most-matches');
