@@ -6,6 +6,7 @@ import {
     trackInitiateCheckout,
     trackCompleteRegistration,
     trackPurchase,
+    trackSubscribe,
     trackTransactionSuccessful,
     trackAddToCart,
     trackViewContent,
@@ -45,6 +46,11 @@ export const trackCompleteRegistrationCombined = (formData?: any) => {
 export const trackPurchaseCombined = (value: number, currency: string = 'USD', packageName?: string) => {
     trackPurchase(value, currency, packageName);
     trackRedditPurchase(value, currency, packageName);
+};
+
+export const trackSubscribeCombined = (value: number, currency: string = 'USD', packageName?: string) => {
+    trackSubscribe(value, currency, packageName);
+    trackRedditPurchase(value, currency, packageName); // Reddit doesn't have Subscribe, use Purchase
 };
 
 export const trackTransactionSuccessfulCombined = (value: number, currency: string = 'USD', packageName?: string, transactionId?: string) => {
@@ -132,6 +138,26 @@ export const trackPurchaseCombinedFull = async (
 ) => {
     // Client-side tracking
     trackPurchaseCombined(value, currency, packageName);
+
+    // Server-side Reddit tracking
+    await trackRedditConversionServer('purchase', {
+        email,
+        value,
+        currency,
+        package_name: packageName,
+        transaction_id: transactionId
+    });
+};
+
+export const trackSubscribeCombinedFull = async (
+    value: number,
+    currency: string = 'USD',
+    packageName?: string,
+    transactionId?: string,
+    email?: string
+) => {
+    // Client-side tracking
+    trackSubscribeCombined(value, currency, packageName);
 
     // Server-side Reddit tracking
     await trackRedditConversionServer('purchase', {

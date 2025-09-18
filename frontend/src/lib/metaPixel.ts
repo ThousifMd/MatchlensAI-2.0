@@ -12,6 +12,7 @@ export const META_PIXEL_EVENTS = {
     INITIATE_CHECKOUT: 'InitiateCheckout',
     COMPLETE_REGISTRATION: 'CompleteRegistration',
     PURCHASE: 'Purchase',
+    SUBSCRIBE: 'Subscribe',
     ADD_TO_CART: 'AddToCart',
     VIEW_CONTENT: 'ViewContent',
     CUSTOM_EVENT: 'CustomEvent'
@@ -58,6 +59,16 @@ export const trackPurchase = (value: number, currency: string = 'USD', packageNa
         currency: currency,
         content_name: packageName || 'Pricing Package',
         content_category: 'purchase'
+    });
+};
+
+export const trackSubscribe = (value: number, currency: string = 'USD', packageName?: string) => {
+    trackMetaPixelEvent(META_PIXEL_EVENTS.SUBSCRIBE, {
+        value: value,
+        currency: currency,
+        content_name: packageName || 'Pricing Package',
+        content_category: 'subscription',
+        predicted_ltv: value
     });
 };
 

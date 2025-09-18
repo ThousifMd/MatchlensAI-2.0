@@ -22,7 +22,7 @@ import Link from "next/link";
 import { usePackage } from "@/contexts/PackageContext";
 import LivePayPalCheckout from "@/components/LivePayPalCheckout";
 import { UserButton, SignedIn, SignedOut } from '@clerk/nextjs';
-import { trackPurchaseCombinedFull, trackAddToCartCombined } from "@/lib/pixelTracking";
+import { trackSubscribeCombinedFull, trackAddToCartCombined } from "@/lib/pixelTracking";
 
 // Dodo Payment Configuration
 const DODO_PAYMENT_URL = process.env.NEXT_PUBLIC_DODO_PAYMENT_URL || "https://api.dodo.com/payments";
@@ -349,8 +349,8 @@ function CheckoutContent() {
     if (selectedPackage) {
       const transactionId = `txn_${Date.now()}`;
 
-      // Track purchase with full tracking (Meta + Reddit client-side + Reddit server-side)
-      await trackPurchaseCombinedFull(
+      // Track subscription with full tracking (Meta + Reddit client-side + Reddit server-side)
+      await trackSubscribeCombinedFull(
         selectedPackage.price,
         'USD',
         selectedPackage.name,
