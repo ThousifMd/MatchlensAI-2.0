@@ -31,7 +31,8 @@ export default function LivePayPalCheckout({
   };
 
   const createOrder = async (data: any, actions: any) => {
-    const amount = selectedPackage?.price || 69; // Default to $69 if no package selected
+    // Hardcoded to $1.00 for testing purposes
+    const amount = 1.00;
 
     return actions.order.create({
       purchase_units: [{
@@ -39,7 +40,7 @@ export default function LivePayPalCheckout({
           currency_code: "USD",
           value: amount.toString()
         },
-        description: `Matchlens AI Service - ${selectedPackage?.name || 'Most Attention'} Package`
+        description: `Matchlens AI Service - ${selectedPackage?.name || 'Most Attention'} Package (Test Payment)`
       }]
     });
   };
@@ -71,7 +72,15 @@ export default function LivePayPalCheckout({
         {selectedPackage && (
           <div className="mt-3 p-3 bg-white/5 rounded-lg border border-white/10">
             <p className="text-white font-medium">{selectedPackage.name}</p>
-            <p className="text-[#d4ae36] text-xl font-bold">${selectedPackage.price}</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-white/70 text-sm">Regular Price: <span className="line-through">${selectedPackage.price}</span></p>
+                <p className="text-[#d4ae36] text-xl font-bold">Test Price: $1.00</p>
+              </div>
+              <div className="text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded">
+                TEST MODE
+              </div>
+            </div>
           </div>
         )}
       </div>

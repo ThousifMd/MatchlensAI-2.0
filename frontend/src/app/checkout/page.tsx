@@ -363,7 +363,7 @@ function CheckoutContent() {
     try {
       const paymentData = {
         order_id: `paypal_${Date.now()}`,
-        amount: selectedPackage?.price || 1,
+        amount: 1.00, // Test payment amount
         currency: "USD",
         package_id: selectedPackage?.id || "test_package",
         package_name: selectedPackage?.name || "Test Package",
@@ -669,8 +669,8 @@ function CheckoutContent() {
                       trackAddToCartCombined(pkg.name, pkg.price);
                     }}
                     className={`p-3 rounded-lg border cursor-pointer transition-all duration-200 ${selectedPackage?.id === pkg.id
-                        ? 'border-[#d4ae36] bg-[#d4ae36]/10'
-                        : 'border-white/20 hover:border-white/40 hover:bg-white/5'
+                      ? 'border-[#d4ae36] bg-[#d4ae36]/10'
+                      : 'border-white/20 hover:border-white/40 hover:bg-white/5'
                       }`}
                   >
                     <div className="flex items-center justify-between">
