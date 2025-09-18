@@ -15,13 +15,13 @@ export const FinalCTASection: React.FC = () => {
     const handleCTAClick = () => {
         // Track CTA click
         trackCTAClickCombined("Make Me A Match Magnet", "Final CTA Section");
-        
+
         // Auto-select the "Most Attention" package ($69)
         const mostAttentionPackage = {
             id: "most-matches",
             name: "Most Attention",
             price: 69,
-            originalPrice: 99,
+            originalPrice: 119,
             description: "Most popular choice",
             features: [
                 "10 enhanced photos",
@@ -36,10 +36,10 @@ export const FinalCTASection: React.FC = () => {
         };
 
         setSelectedPackage(mostAttentionPackage);
-        
+
         // Track package selection
         trackAddToCartCombined("Most Attention", 69);
-        
+
         // Store in localStorage for checkout page
         localStorage.setItem('selectedPackage', 'most-matches');
 

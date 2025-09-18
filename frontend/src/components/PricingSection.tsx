@@ -33,7 +33,7 @@ const pricingTiers = [
     id: "most-matches",
     name: "Most Attention",
     price: 69,
-    originalPrice: 99,
+    originalPrice: 119,
     discount: "Most Popular",
     description: "Most popular choice",
     benefit: "Our proven package that triples your responses fast.",

@@ -7,6 +7,7 @@ import { trackCTAClick } from "@/lib/metaPixel"
 import { trackCTAClickCombined, trackAddToCartCombined } from "@/lib/pixelTracking"
 import { usePackage } from "@/contexts/PackageContext"
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import AuthModal from "./AuthModal"
 
 // Check if Clerk is configured
 const isClerkConfigured = () => {
@@ -29,18 +30,19 @@ const navItems: Array<{ label: string, href: string }> = []
 export default function Navbar({ ctaHref, className }: NavbarProps) {
   const [scrolled, setScrolled] = React.useState(false)
   const [isLoaded, setIsLoaded] = React.useState(false)
+  const [showAuthModal, setShowAuthModal] = React.useState(false)
   const { setSelectedPackage } = usePackage()
 
   const handleCTAClick = () => {
     // Track CTA click
     trackCTAClickCombined("Join the Top 5%", "Navbar Desktop");
-    
+
     // Auto-select the "Most Attention" package ($69)
     const mostAttentionPackage = {
       id: "most-matches",
       name: "Most Attention",
       price: 69,
-      originalPrice: 99,
+      originalPrice: 119,
       description: "Most popular choice",
       features: [
         "10 enhanced photos",
@@ -55,10 +57,10 @@ export default function Navbar({ ctaHref, className }: NavbarProps) {
     };
 
     setSelectedPackage(mostAttentionPackage);
-    
+
     // Track package selection
     trackAddToCartCombined("Most Attention", 69);
-    
+
     // Store in localStorage for checkout page
     localStorage.setItem('selectedPackage', 'most-matches');
 
@@ -70,6 +72,9 @@ export default function Navbar({ ctaHref, className }: NavbarProps) {
       const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
       window.scrollTo({ top: middle, behavior: 'smooth' });
     }
+
+    // Show auth modal immediately
+    setShowAuthModal(true);
   };
 
   React.useEffect(() => {
@@ -149,6 +154,17 @@ export default function Navbar({ ctaHref, className }: NavbarProps) {
           </div>
         </div>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={() => {
+          setShowAuthModal(false);
+          // Redirect to checkout after successful auth
+          window.location.href = '/checkout';
+        }}
+      />
     </header>
   )
 }

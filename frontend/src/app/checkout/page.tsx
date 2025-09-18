@@ -52,7 +52,7 @@ const packages: Package[] = [
   {
     id: "most-matches",
     name: "Most Attention",
-    originalPrice: 99,
+    originalPrice: 119,
     price: 69,
     features: [
       "10 enhanced photos",
@@ -668,11 +668,10 @@ function CheckoutContent() {
                       // Track package change
                       trackAddToCartCombined(pkg.name, pkg.price);
                     }}
-                    className={`p-3 rounded-lg border cursor-pointer transition-all duration-200 ${
-                      selectedPackage?.id === pkg.id
+                    className={`p-3 rounded-lg border cursor-pointer transition-all duration-200 ${selectedPackage?.id === pkg.id
                         ? 'border-[#d4ae36] bg-[#d4ae36]/10'
                         : 'border-white/20 hover:border-white/40 hover:bg-white/5'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-between">
                       <div>

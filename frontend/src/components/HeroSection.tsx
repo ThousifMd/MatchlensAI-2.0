@@ -22,7 +22,7 @@ export default function HeroSection({ ctaHref, className }: HeroSectionProps) {
       id: "most-matches",
       name: "Most Attention",
       price: 69,
-      originalPrice: 99,
+      originalPrice: 119,
       description: "Most popular choice",
       features: [
         "10 enhanced photos",
@@ -37,10 +37,10 @@ export default function HeroSection({ ctaHref, className }: HeroSectionProps) {
     };
 
     setSelectedPackage(mostAttentionPackage);
-    
+
     // Track package selection
     trackAddToCartCombined("Most Attention", 69);
-    
+
     // Store in localStorage for checkout page
     localStorage.setItem('selectedPackage', 'most-matches');
 
