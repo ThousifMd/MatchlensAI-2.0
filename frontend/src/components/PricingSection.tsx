@@ -103,6 +103,12 @@ export const PricingSection = () => {
         window.location.href = '/checkout';
       } else {
         // User not signed in, show auth modal
+        console.log('User not signed in, showing auth modal');
+
+        // Track that user needs to sign up to continue
+        trackCTAClick("Get Started - Sign Up Required", "Pricing Section");
+        trackLead("Pricing Section - Sign Up Required");
+
         setPendingPackageId(packageId);
         setIsAuthModalOpen(true);
       }

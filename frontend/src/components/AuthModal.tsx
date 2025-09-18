@@ -37,7 +37,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
                         Sign In
                     </h2>
                     <p className="text-gray-400 text-sm">
-                        Welcome back! Sign in to continue
+                        Sign in to continue
                     </p>
                 </div>
 

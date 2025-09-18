@@ -1,10 +1,56 @@
 "use client";
 
-import { SignIn, SignUp } from '@clerk/nextjs';
-import { useState } from 'react';
+import { SignIn, SignUp, useUser } from '@clerk/nextjs';
+import { useState, useEffect } from 'react';
+import { trackCTAClick, trackLead, trackCompleteRegistration } from '@/lib/metaPixel';
+import { trackRedditLead, trackRedditCompleteRegistration } from '@/lib/redditPixel';
 
 export default function AuthPage() {
     const [isSignUp, setIsSignUp] = useState(false);
+    const [hasTrackedSignUp, setHasTrackedSignUp] = useState(false);
+    const { user, isLoaded } = useUser();
+
+    // Track when user completes sign-up
+    useEffect(() => {
+        if (isLoaded && user && !hasTrackedSignUp) {
+            // Check if this is a new user (created within last 30 seconds)
+            const userCreatedAt = new Date(user.createdAt);
+            const now = new Date();
+            const timeDiff = now.getTime() - userCreatedAt.getTime();
+
+            if (timeDiff < 30000) { // 30 seconds
+                console.log('🎉 New user sign-up detected, tracking registration event');
+
+                // Track sign-up completion
+                const signUpData = {
+                    user_id: user.id,
+                    email: user.primaryEmailAddress?.emailAddress,
+                    name: user.fullName,
+                    signup_method: 'Clerk',
+                    signup_source: 'Auth Page'
+                };
+
+                trackCompleteRegistration(signUpData);
+                trackRedditCompleteRegistration(signUpData);
+
+                setHasTrackedSignUp(true);
+            }
+        }
+    }, [user, isLoaded, hasTrackedSignUp]);
+
+    const handleSignUpClick = () => {
+        // Track sign-up button click
+        trackCTAClick("Sign Up Button", "Auth Page");
+        trackLead("Auth Page Sign Up");
+        trackRedditLead("Auth Page Sign Up");
+        setIsSignUp(true);
+    };
+
+    const handleSignInClick = () => {
+        // Track sign-in button click
+        trackCTAClick("Sign In Button", "Auth Page");
+        setIsSignUp(false);
+    };
 
     return (
         <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
@@ -17,7 +63,7 @@ export default function AuthPage() {
                 {/* Toggle between Sign In and Sign Up */}
                 <div className="flex mb-6 bg-[#1a1a1a] rounded-lg p-1 border border-[#374151]">
                     <button
-                        onClick={() => setIsSignUp(false)}
+                        onClick={handleSignInClick}
                         className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${!isSignUp
                             ? 'bg-[#d4ae36] text-black'
                             : 'text-gray-300 hover:text-white'
@@ -26,7 +72,7 @@ export default function AuthPage() {
                         Sign In
                     </button>
                     <button
-                        onClick={() => setIsSignUp(true)}
+                        onClick={handleSignUpClick}
                         className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${isSignUp
                             ? 'bg-[#d4ae36] text-black'
                             : 'text-gray-300 hover:text-white'
