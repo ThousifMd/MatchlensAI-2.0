@@ -3,11 +3,37 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { usePackage } from "@/contexts/PackageContext";
+import AuthModal from "./AuthModal";
 
 export const FinalCTASection: React.FC = () => {
     const router = useRouter();
+    const { setSelectedPackage } = usePackage();
+    const [showAuthModal, setShowAuthModal] = React.useState(false);
 
     const handleCTAClick = () => {
+        // Auto-select the "Most Attention" package ($69)
+        const mostAttentionPackage = {
+            id: "most-matches",
+            name: "Most Attention",
+            price: 69,
+            originalPrice: 199,
+            description: "Most popular choice",
+            features: [
+                "10 enhanced photos",
+                "6 style variations",
+                "Bio optimization",
+                "Profile strategy guide",
+                "Private and secure"
+            ],
+            buttonText: "Make my profile irresistible",
+            popular: true,
+            mobileOrder: 1
+        };
+        
+        setSelectedPackage(mostAttentionPackage);
+        
+        // Scroll to pricing section
         const pricingSection = document.getElementById('pricing-section');
         if (pricingSection) {
             const elementRect = pricingSection.getBoundingClientRect();
@@ -15,6 +41,9 @@ export const FinalCTASection: React.FC = () => {
             const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
             window.scrollTo({ top: middle, behavior: 'smooth' });
         }
+        
+        // Show auth modal immediately
+        setShowAuthModal(true);
     };
 
     return (
@@ -62,6 +91,17 @@ export const FinalCTASection: React.FC = () => {
                     </button>
                 </div>
             </div>
+
+            {/* Auth Modal */}
+            <AuthModal
+                isOpen={showAuthModal}
+                onClose={() => setShowAuthModal(false)}
+                onSuccess={() => {
+                    setShowAuthModal(false);
+                    // Redirect to checkout after successful auth
+                    window.location.href = '/checkout';
+                }}
+            />
         </section>
     );
 };

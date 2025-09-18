@@ -40,7 +40,7 @@ export const StatsSection: React.FC = () => {
                             The Science of Standing Out
                         </h2>
                         <p className="text-base md:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
-                            Real data reveals the harsh reality of modern dating apps
+                            Real data reveals how online profiles actually perform
                         </p>
                     </div>
 

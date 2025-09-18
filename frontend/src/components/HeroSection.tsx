@@ -1,7 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { trackCTAClick } from "@/lib/metaPixel";
+import { trackCTAClickCombined } from "@/lib/pixelTracking";
+import { usePackage } from "@/contexts/PackageContext";
+import AuthModal from "./AuthModal";
 
 interface HeroSectionProps {
   ctaHref: string;
@@ -9,8 +11,34 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ ctaHref, className }: HeroSectionProps) {
+  const { setSelectedPackage } = usePackage();
+  const [showAuthModal, setShowAuthModal] = React.useState(false);
+
   const handleCTA = () => {
-    trackCTAClick("Make Me A Match Magnet", "Hero Section");
+    trackCTAClickCombined("Make Me A Match Magnet", "Hero Section");
+
+    // Auto-select the "Most Attention" package ($69)
+    const mostAttentionPackage = {
+      id: "most-matches",
+      name: "Most Attention",
+      price: 69,
+      originalPrice: 199,
+      description: "Most popular choice",
+      features: [
+        "10 enhanced photos",
+        "6 style variations",
+        "Bio optimization",
+        "Profile strategy guide",
+        "Private and secure"
+      ],
+      buttonText: "Make my profile irresistible",
+      popular: true,
+      mobileOrder: 1
+    };
+
+    setSelectedPackage(mostAttentionPackage);
+
+    // Scroll to pricing section
     const pricingSection = document.getElementById('pricing-section');
     if (pricingSection) {
       const elementRect = pricingSection.getBoundingClientRect();
@@ -18,6 +46,9 @@ export default function HeroSection({ ctaHref, className }: HeroSectionProps) {
       const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
       window.scrollTo({ top: middle, behavior: 'smooth' });
     }
+
+    // Show auth modal immediately
+    setShowAuthModal(true);
   };
 
   return (
@@ -32,7 +63,7 @@ export default function HeroSection({ ctaHref, className }: HeroSectionProps) {
       {/* Hero Content */}
       <div className="text-center md:text-left mb-8 md:mb-12">
         <h1 className="font-heading font-extrabold tracking-tight text-[28px] leading-[1.1] md:text-[36px] lg:text-[56px] md:leading-[1.05] text-white mb-4 md:mb-6">
-          Did you know <span className="text-[#FFD700] text-[32px] md:text-[42px] lg:text-[68px]">85%</span> of profiles get zer<span className="text-[#FFD700]">0</span> attention.<br />
+          Did you know <span className="text-[#FFD700] text-[32px] md:text-[42px] lg:text-[68px]">95%</span> of profiles get zer<span className="text-[#FFD700]">0</span> attention.<br />
           Only <span className="text-[#FFD700] text-[32px] md:text-[42px] lg:text-[68px]">5%</span> get all the attention.
         </h1>
 
@@ -105,6 +136,17 @@ export default function HeroSection({ ctaHref, className }: HeroSectionProps) {
           <span className="font-semibold">2,847 Happy Customers</span>
         </div>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={() => {
+          setShowAuthModal(false);
+          // Redirect to checkout after successful auth
+          window.location.href = '/checkout';
+        }}
+      />
     </section>
   );
 }

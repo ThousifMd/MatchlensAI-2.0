@@ -119,6 +119,27 @@ export default function RootLayout({
         </noscript>
         {/* End Meta Pixel Code */}
 
+        {/* Reddit Pixel Code */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);
+              rdt('init','a2_hp0yo1p5fwv8');
+              rdt('track', 'PageView');
+            `,
+          }}
+        />
+        <noscript>
+          <img
+            height="1"
+            width="1"
+            style={{ display: 'none' }}
+            src="https://www.reddit.com/i/adsct?bq=a2_hp0yo1p5fwv8&event=PageView&noscript=1"
+            alt=""
+          />
+        </noscript>
+        {/* End Reddit Pixel Code */}
+
         {/* Fix hydration issues with browser extensions */}
         <script
           dangerouslySetInnerHTML={{
