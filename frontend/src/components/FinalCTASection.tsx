@@ -17,7 +17,7 @@ export const FinalCTASection: React.FC = () => {
             id: "most-matches",
             name: "Most Attention",
             price: 69,
-            originalPrice: 199,
+            originalPrice: 99,
             description: "Most popular choice",
             features: [
                 "10 enhanced photos",
@@ -30,9 +30,9 @@ export const FinalCTASection: React.FC = () => {
             popular: true,
             mobileOrder: 1
         };
-        
+
         setSelectedPackage(mostAttentionPackage);
-        
+
         // Scroll to pricing section
         const pricingSection = document.getElementById('pricing-section');
         if (pricingSection) {
@@ -41,7 +41,7 @@ export const FinalCTASection: React.FC = () => {
             const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
             window.scrollTo({ top: middle, behavior: 'smooth' });
         }
-        
+
         // Show auth modal immediately
         setShowAuthModal(true);
     };

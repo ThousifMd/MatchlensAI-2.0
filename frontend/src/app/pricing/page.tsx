@@ -36,7 +36,7 @@ const packages: Package[] = [
         id: "professional",
         name: "Professional Package",
         originalPrice: 99,
-        price: 1,
+        price: 69,
         description: "Our most popular choice for serious daters",
         features: [
             "50 enhanced photos",
@@ -51,7 +51,7 @@ const packages: Package[] = [
         id: "elite",
         name: "Elite Package",
         originalPrice: 149,
-        price: 1,
+        price: 97,
         description: "Complete profile transformation",
         features: [
             "100 enhanced photos",

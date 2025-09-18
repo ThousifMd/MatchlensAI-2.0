@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 
 import { CheckCircle2, User, Users, Dumbbell, Plane, UtensilsCrossed, Camera, Music, BookOpen, Gamepad2, Heart, Coffee, Mountain, Upload, X, Check, Smartphone, FileText, TrendingUp, Mail, Phone, Clock } from "lucide-react";
-import { trackInitiateCheckout, trackCompleteRegistration, trackFormStep } from "@/lib/metaPixel";
+import { trackInitiateCheckoutCombinedFull, trackCompleteRegistrationCombinedFull, trackFormStepCombined } from "@/lib/pixelTracking";
 import { completeOnboardingFlow } from "@/lib/supabaseUtils";
 // import { UserButton } from '@clerk/nextjs'; // Temporarily disabled to debug white screen
 
@@ -212,8 +212,8 @@ function OnboardingContent() {
       localStorage.removeItem('onboardingFormData');
       setCurrentStep(1);
     }
-    // Track form initiation
-    trackInitiateCheckout("Onboarding Form");
+    // Track form initiation with server-side Reddit tracking
+    trackInitiateCheckoutCombinedFull("Onboarding Form");
   }, [searchParams, router]);
 
   const totalSteps = 5;
@@ -300,23 +300,23 @@ function OnboardingContent() {
     }
 
     if (currentStep === 1 && isStep1Valid) {
-      trackFormStep(1, "Basic Information");
+      trackFormStepCombined(1, "Basic Information");
       setCurrentStep(2);
     } else if (currentStep === 2 && isStep2Valid) {
-      trackFormStep(2, "Photo Upload");
+      trackFormStepCombined(2, "Photo Upload");
       setCurrentStep(3);
     } else if (currentStep === 3 && isStep3Valid) {
-      trackFormStep(3, "Screenshot Upload");
+      trackFormStepCombined(3, "Screenshot Upload");
       setCurrentStep(4);
     } else if (currentStep === 4) {
-      trackFormStep(4, "Bio and Preferences");
+      trackFormStepCombined(4, "Bio and Preferences");
       setCurrentStep(5);
     } else if (currentStep === 5 && isStep5Valid) {
       setIsSubmitting(true);
       console.log('🚀 Starting form submission...');
 
-      // Track form completion
-      trackCompleteRegistration({
+      // Track form completion with server-side Reddit tracking
+      await trackCompleteRegistrationCombinedFull({
         name: formData.name,
         age: formData.age,
         dating_goal: formData.datingGoal,
@@ -325,7 +325,7 @@ function OnboardingContent() {
         vibe: formData.vibe,
         want_more: formData.wantMore,
         one_liner: formData.oneLiner
-      });
+      }, formData.email, formData.phone);
 
       // Submit form data and images to Supabase
       try {

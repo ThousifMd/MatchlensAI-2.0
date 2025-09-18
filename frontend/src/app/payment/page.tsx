@@ -77,7 +77,7 @@ const packages: Package[] = [
         id: "elite",
         name: "Elite Package",
         originalPrice: 149,
-        salePrice: 99,
+        salePrice: 97,
         features: [
             "100 enhanced photos",
             "10 style variations",

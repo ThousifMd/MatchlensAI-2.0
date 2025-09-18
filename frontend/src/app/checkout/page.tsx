@@ -22,7 +22,7 @@ import Link from "next/link";
 import { usePackage } from "@/contexts/PackageContext";
 import LivePayPalCheckout from "@/components/LivePayPalCheckout";
 import { UserButton, SignedIn, SignedOut } from '@clerk/nextjs';
-import { trackPurchase, trackTransactionSuccessful } from "@/lib/metaPixel";
+import { trackPurchaseCombinedFull } from "@/lib/pixelTracking";
 
 // Dodo Payment Configuration
 const DODO_PAYMENT_URL = process.env.NEXT_PUBLIC_DODO_PAYMENT_URL || "https://api.dodo.com/payments";
@@ -52,7 +52,7 @@ const packages: Package[] = [
   {
     id: "most-matches",
     name: "Most Attention",
-    originalPrice: 199,
+    originalPrice: 99,
     price: 69,
     features: [
       "10 enhanced photos",
@@ -66,7 +66,7 @@ const packages: Package[] = [
   {
     id: "date-ready",
     name: "Complete Makeover",
-    originalPrice: 199,
+    originalPrice: 149,
     price: 97,
     features: [
       "20 enhanced photos",
@@ -327,31 +327,36 @@ function CheckoutContent() {
   const [selectedPackage, setSelectedPackageState] = useState<Package | null>(null);
 
   useEffect(() => {
-    if (contextPackage) {
-      setSelectedPackageState(contextPackage);
+    // Always use our local packages array with updated pricing
+    // This ensures we always show the correct pricing regardless of context
+    if (typeof window !== 'undefined') {
+      const packageId = localStorage.getItem('selectedPackage') || "most-matches";
+      const pkg = packages.find(p => p.id === packageId) || packages[1];
+      setSelectedPackageState(pkg);
     } else {
-      // Fallback to localStorage (client-side only)
-      if (typeof window !== 'undefined') {
-        const packageId = localStorage.getItem('selectedPackage') || "most-matches";
-        const pkg = packages.find(p => p.id === packageId) || packages[1];
-        setSelectedPackageState(pkg);
-      } else {
-        // Default to most-matches package during SSR
-        setSelectedPackageState(packages[1]);
-      }
+      // Default to most-matches package during SSR
+      setSelectedPackageState(packages[1]);
     }
-  }, [contextPackage]);
+  }, []);
 
   const handlePaymentSuccess = async (details?: any) => {
     console.log('🎉 handlePaymentSuccess called with details:', details);
 
-    // Track purchase and transaction successful events
-    if (selectedPackage) {
-      // Track purchase event
-      trackPurchase(selectedPackage.price, 'USD', selectedPackage.name);
+    // Show immediate success notification
+    showNotification('success', 'Payment processed successfully!');
 
-      // Track transaction successful event
-      trackTransactionSuccessful(selectedPackage.price, 'USD', selectedPackage.name, `txn_${Date.now()}`);
+    // Track purchase with both client-side and server-side Reddit tracking
+    if (selectedPackage) {
+      const transactionId = `txn_${Date.now()}`;
+
+      // Track purchase with full tracking (Meta + Reddit client-side + Reddit server-side)
+      await trackPurchaseCombinedFull(
+        selectedPackage.price,
+        'USD',
+        selectedPackage.name,
+        transactionId,
+        details?.payer?.email_address // PayPal email if available
+      );
     }
 
     // Create a payment record directly in Supabase (client-side)
@@ -373,13 +378,13 @@ function CheckoutContent() {
       const { createClient } = await import('@supabase/supabase-js');
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-      
+
       if (!supabaseUrl || !supabaseKey) {
         throw new Error('Supabase credentials not available');
       }
 
       const supabase = createClient(supabaseUrl, supabaseKey);
-      
+
       const { data, error } = await supabase
         .from('payments')
         .insert([paymentData])
@@ -391,17 +396,17 @@ function CheckoutContent() {
       }
 
       const paymentId = data.payment_id;
-      
+
       // Set localStorage values with real payment_id
       localStorage.setItem('lastPaymentId', paymentId);
       localStorage.setItem('paymentCompleted', 'true');
       localStorage.setItem('selectedPackage', JSON.stringify(selectedPackage));
 
       console.log('✅ Real payment record created:', { paymentId, selectedPackage });
-      
+
     } catch (error) {
       console.error('❌ Failed to create payment record:', error);
-      
+
       // Fallback: Use localStorage fallback in supabaseUtils
       const paymentId = `local_${Date.now()}`;
       localStorage.setItem('lastPaymentId', paymentId);
@@ -411,21 +416,34 @@ function CheckoutContent() {
       console.log('⚠️ Using localStorage fallback payment_id:', { paymentId, selectedPackage });
     }
 
-    // IMMEDIATELY trigger confetti animation and popup
-    setShowConfetti(true);
-    setShowSuccessPopup(true);
+    // Staggered animation sequence for smoother transition
+    setTimeout(() => {
+      setShowConfetti(true);
+      console.log('🎊 Confetti animation started');
+    }, 200);
 
-    console.log('🎊 Confetti and popup should be showing now!');
+    setTimeout(() => {
+      setShowSuccessPopup(true);
+      console.log('✅ Success popup shown');
+    }, 800);
 
-    // Hide confetti after 3 seconds
-    setTimeout(() => setShowConfetti(false), 3000);
+    // Hide confetti after 4 seconds (longer for better effect)
+    setTimeout(() => {
+      setShowConfetti(false);
+      console.log('🎊 Confetti animation ended');
+    }, 4000);
 
-    // Hide success popup after 5 seconds
-    setTimeout(() => setShowSuccessPopup(false), 5000);
+    // Auto-hide success popup after 6 seconds (longer for user to read)
+    setTimeout(() => {
+      setShowSuccessPopup(false);
+      console.log('✅ Success popup auto-hidden');
+    }, 6000);
 
-    // Redirect to onboarding page immediately
-    console.log('🔄 Redirecting to onboarding page...');
-    router.push('/onboarding');
+    // Redirect to onboarding page after a smooth delay
+    setTimeout(() => {
+      console.log('🔄 Redirecting to onboarding page...');
+      router.push('/onboarding');
+    }, 2000);
   };
 
   if (!selectedPackage) {
@@ -484,36 +502,42 @@ function CheckoutContent() {
         </div>
       )}
 
-      {/* Success Popup with Countdown */}
+      {/* Success Popup with Enhanced Animations */}
       {showSuccessPopup && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 max-w-md w-full text-center shadow-2xl">
-            {/* Success Icon */}
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 max-w-md w-full text-center shadow-2xl animate-scale-in">
+            {/* Success Icon with Pulse Animation */}
             <div className="mb-6">
-              <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="h-12 w-12 text-green-400" />
+              <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse-slow">
+                <CheckCircle className="h-12 w-12 text-green-400 animate-bounce-in" />
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Payment Successful!</h2>
-              <p className="text-gray-300">Your enhanced photos will be ready soon</p>
+              <h2 className="text-2xl font-bold text-white mb-2 animate-slide-up">Payment Successful!</h2>
+              <p className="text-gray-300 animate-slide-up-delayed">Your enhanced photos will be ready soon</p>
             </div>
 
-
+            {/* Progress Indicator */}
+            <div className="mb-6">
+              <div className="w-full bg-white/10 rounded-full h-2 mb-2">
+                <div className="bg-gradient-to-r from-[#d4ae36] to-green-400 h-2 rounded-full animate-progress-fill"></div>
+              </div>
+              <p className="text-sm text-white/70">Redirecting to questionnaire...</p>
+            </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-3">
+            <div className="flex gap-3 animate-slide-up-delayed-2">
               <Button
                 onClick={() => {
                   setShowSuccessPopup(false);
                   router.push('/onboarding');
                 }}
-                className="flex-1 bg-[#d4ae36] hover:bg-[#c19d2f] text-black font-semibold"
+                className="flex-1 bg-[#d4ae36] hover:bg-[#c19d2f] text-black font-semibold transition-all duration-300 hover:scale-105"
               >
                 Continue to Questionnaire
               </Button>
               <Button
                 variant="outline"
                 onClick={() => setShowSuccessPopup(false)}
-                className="flex-1 border-white/20 text-white hover:bg-white/10"
+                className="flex-1 border-white/20 text-white hover:bg-white/10 transition-all duration-300 hover:scale-105"
               >
                 Close
               </Button>

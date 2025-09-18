@@ -33,7 +33,7 @@ const pricingTiers = [
     id: "most-matches",
     name: "Most Attention",
     price: 69,
-    originalPrice: 199,
+    originalPrice: 99,
     discount: "Most Popular",
     description: "Most popular choice",
     benefit: "Our proven package that triples your responses fast.",
@@ -52,8 +52,8 @@ const pricingTiers = [
     id: "date-ready",
     name: "Complete Makeover",
     price: 97,
-    originalPrice: 199,
-    discount: "Save 51%",
+    originalPrice: 149,
+    discount: "Save 35%",
     description: "Ultimate transformation",
     benefit: "Complete transformation so you're ready for meaningful connections, not just likes.",
     features: [
@@ -92,7 +92,8 @@ export const PricingSection = () => {
       trackCTAClick(`Get Started - ${packageData.name}`, "Pricing Section");
       // Set global selection
       setSelectedPackage(packageData);
-      // Store selected package in localStorage for payment page
+      // Store selected package ID in localStorage for payment page
+      // The checkout page will use its own updated pricing data
       localStorage.setItem('selectedPackage', packageId);
 
       // Check if user is already signed in

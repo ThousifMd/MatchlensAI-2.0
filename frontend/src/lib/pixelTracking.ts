@@ -83,3 +83,110 @@ export const trackCustomEventCombined = (eventName: string, data?: any) => {
         ...data
     });
 };
+
+// Server-side Reddit Conversion API tracking functions
+export const trackRedditConversionServer = async (
+    eventType: 'purchase' | 'lead' | 'initiate_checkout' | 'complete_registration' | 'page_view',
+    data: {
+        email?: string;
+        phone?: string;
+        value?: number;
+        currency?: string;
+        package_name?: string;
+        transaction_id?: string;
+        custom_data?: any;
+    } = {}
+) => {
+    try {
+        const response = await fetch('/api/reddit-conversion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                event_type: eventType,
+                ...data
+            })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            console.log(`✅ Reddit Conversion API: ${eventType} tracked successfully`);
+        } else {
+            console.error(`❌ Reddit Conversion API: Failed to track ${eventType}`, result.error);
+        }
+        return result.success;
+    } catch (error) {
+        console.error(`❌ Reddit Conversion API Exception for ${eventType}:`, error);
+        return false;
+    }
+};
+
+// Combined client-side + server-side tracking functions
+export const trackPurchaseCombinedFull = async (
+    value: number,
+    currency: string = 'USD',
+    packageName?: string,
+    transactionId?: string,
+    email?: string
+) => {
+    // Client-side tracking
+    trackPurchaseCombined(value, currency, packageName);
+
+    // Server-side Reddit tracking
+    await trackRedditConversionServer('purchase', {
+        email,
+        value,
+        currency,
+        package_name: packageName,
+        transaction_id: transactionId
+    });
+};
+
+export const trackLeadCombinedFull = async (
+    source?: string,
+    email?: string,
+    phone?: string
+) => {
+    // Client-side tracking
+    trackLeadCombined(source);
+
+    // Server-side Reddit tracking
+    await trackRedditConversionServer('lead', {
+        email,
+        phone,
+        custom_data: { lead_source: source }
+    });
+};
+
+export const trackInitiateCheckoutCombinedFull = async (
+    formType?: string,
+    email?: string,
+    packageName?: string
+) => {
+    // Client-side tracking
+    trackInitiateCheckoutCombined(formType);
+
+    // Server-side Reddit tracking
+    await trackRedditConversionServer('initiate_checkout', {
+        email,
+        package_name: packageName,
+        custom_data: { form_type: formType }
+    });
+};
+
+export const trackCompleteRegistrationCombinedFull = async (
+    formData?: any,
+    email?: string,
+    phone?: string
+) => {
+    // Client-side tracking
+    trackCompleteRegistrationCombined(formData);
+
+    // Server-side Reddit tracking
+    await trackRedditConversionServer('complete_registration', {
+        email,
+        phone,
+        custom_data: formData
+    });
+};

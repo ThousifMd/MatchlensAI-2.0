@@ -22,7 +22,7 @@ export default function HeroSection({ ctaHref, className }: HeroSectionProps) {
       id: "most-matches",
       name: "Most Attention",
       price: 69,
-      originalPrice: 199,
+      originalPrice: 99,
       description: "Most popular choice",
       features: [
         "10 enhanced photos",
