@@ -362,6 +362,8 @@ function OnboardingContent() {
         console.log("🚀 Starting complete onboarding flow with Supabase:", onboardingData);
         console.log("📸 Profile photos:", formData.photos.length);
         console.log("📱 Screenshots:", formData.screenshots.length);
+        console.log("🔧 Environment check - Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+        console.log("🔧 Environment check - Supabase Key exists:", !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
         console.log("🔄 Calling completeOnboardingFlow...");
         const result = await completeOnboardingFlow(
