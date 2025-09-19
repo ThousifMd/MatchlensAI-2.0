@@ -281,17 +281,15 @@ function CheckoutContent() {
       console.log('✅ Success popup shown');
     }, 800);
 
-    // Hide confetti after 4 seconds (longer for better effect)
+    // Hide confetti and redirect after 4 seconds (when confetti animation ends)
     setTimeout(() => {
       setShowConfetti(false);
       console.log('🎊 Confetti animation ended');
-    }, 4000);
 
-    // Redirect to onboarding page after user sees success popup
-    setTimeout(() => {
+      // Redirect to onboarding page after confetti ends
       console.log('🔄 Redirecting to onboarding page...');
       setShowSuccessPopup(false); // Hide popup before redirect
-      
+
       // Use window.location for more reliable redirect
       try {
         router.push('/onboarding');
@@ -300,7 +298,7 @@ function CheckoutContent() {
         console.error('❌ Router push failed, using window.location:', error);
         window.location.href = '/onboarding';
       }
-    }, 3000); // Give user 3 seconds to see the success popup
+    }, 4000); // Redirect after confetti animation ends
 
     // Auto-hide success popup after 6 seconds (fallback)
     setTimeout(() => {
