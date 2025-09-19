@@ -363,20 +363,26 @@ function OnboardingContent() {
         console.log("📸 Profile photos:", formData.photos.length);
         console.log("📱 Screenshots:", formData.screenshots.length);
 
+        console.log("🔄 Calling completeOnboardingFlow...");
         const result = await completeOnboardingFlow(
           onboardingData,
           formData.photos,
           formData.screenshots
         );
 
+        console.log("📊 completeOnboardingFlow result:", result);
+
         if (!result.success) {
           console.error("❌ Failed to complete onboarding flow:", result.error);
-          alert('Failed to submit form data. Please try again.');
+          alert(`Failed to submit form data: ${result.error || 'Unknown error'}. Please try again.`);
           setIsSubmitting(false); // Reset submission state on error
           return;
         }
 
         console.log("✅ Onboarding flow completed successfully with ID:", result.onboardingId);
+
+        // Show success message
+        alert('✅ Onboarding completed successfully! Your data has been saved.');
 
         // Clear payment verification flag after successful submission
         if (typeof window !== 'undefined') {
@@ -384,8 +390,8 @@ function OnboardingContent() {
           localStorage.removeItem('lastPaymentId'); // Also clear the payment ID
         }
 
-        // Redirect to success page after form completion
-        router.push('/onboarding/success');
+        // Redirect to homepage after form completion
+        router.push('/');
       } catch (error) {
         console.error('Error submitting form data:', error);
         alert('Failed to submit form data. Please try again.');
