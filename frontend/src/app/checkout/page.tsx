@@ -201,6 +201,13 @@ function CheckoutContent() {
   const handlePaymentSuccess = async (details?: any) => {
     console.log('🎉 handlePaymentSuccess called with details:', details);
 
+    // Store payment ID in localStorage for onboarding page
+    const paymentId = `paypal_${Date.now()}`;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('lastPaymentId', paymentId);
+      console.log('💾 Payment ID stored in localStorage:', paymentId);
+    }
+
     // Show immediate success notification
     showNotification('success', 'Payment processed successfully!');
 

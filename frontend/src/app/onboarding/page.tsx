@@ -182,8 +182,8 @@ function OnboardingContent() {
     // Check if user has completed payment
     const paymentId = localStorage.getItem('lastPaymentId');
     if (!paymentId) {
-      console.log('No payment_id found, redirecting to pricing page');
-      router.push('/pricing');
+      console.log('No payment_id found, redirecting to homepage');
+      router.push('/');
       return;
     }
 
@@ -334,8 +334,8 @@ function OnboardingContent() {
         if (!paymentId) {
           console.error('❌ No payment_id found in localStorage');
           alert('Payment information not found. Please complete payment first.');
-          // Redirect to pricing page to start the flow
-          router.push('/pricing');
+          // Redirect to homepage to start the flow
+          router.push('/');
           return;
         }
 
