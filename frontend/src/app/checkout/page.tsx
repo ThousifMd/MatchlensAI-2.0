@@ -280,17 +280,26 @@ function CheckoutContent() {
       console.log('🎊 Confetti animation ended');
     }, 4000);
 
-    // Auto-hide success popup after 6 seconds (longer for user to read)
+    // Redirect to onboarding page after user sees success popup
+    setTimeout(() => {
+      console.log('🔄 Redirecting to onboarding page...');
+      setShowSuccessPopup(false); // Hide popup before redirect
+      
+      // Use window.location for more reliable redirect
+      try {
+        router.push('/onboarding');
+        console.log('✅ Router push to /onboarding completed');
+      } catch (error) {
+        console.error('❌ Router push failed, using window.location:', error);
+        window.location.href = '/onboarding';
+      }
+    }, 3000); // Give user 3 seconds to see the success popup
+
+    // Auto-hide success popup after 6 seconds (fallback)
     setTimeout(() => {
       setShowSuccessPopup(false);
       console.log('✅ Success popup auto-hidden');
     }, 6000);
-
-    // Redirect to onboarding page after a smooth delay
-    setTimeout(() => {
-      console.log('🔄 Redirecting to onboarding page...');
-      router.push('/onboarding');
-    }, 2000);
   };
 
   if (!selectedPackage) {
