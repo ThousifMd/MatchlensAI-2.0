@@ -3,7 +3,6 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -24,8 +23,6 @@ import LivePayPalCheckout from "@/components/LivePayPalCheckout";
 import { UserButton, SignedIn, SignedOut } from '@clerk/nextjs';
 import { trackSubscribeCombinedFull, trackAddToCartCombined } from "@/lib/pixelTracking";
 
-// Dodo Payment Configuration
-const DODO_PAYMENT_URL = process.env.NEXT_PUBLIC_DODO_PAYMENT_URL || "https://api.dodo.com/payments";
 
 interface Package {
   id: string;
@@ -100,127 +97,7 @@ const testimonials = [
   },
 ];
 
-interface PaymentFormProps {
-  selectedPackage: Package;
-  onPaymentSuccess: () => void;
-  showNotification: (type: 'success' | 'error' | 'info', message: string) => void;
-  onboardingFormData?: any;
-}
 
-function PaymentForm({ selectedPackage, onPaymentSuccess, showNotification, onboardingFormData }: PaymentFormProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiryDate, setExpiryDate] = useState("");
-  const [cvv, setCvv] = useState("");
-  const [zipCode, setZipCode] = useState("");
-  const [email, setEmail] = useState("");
-
-  // Format card number with spaces
-  const formatCardNumber = (value: string) => {
-    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-    const matches = v.match(/\d{4,16}/g);
-    const match = matches && matches[0] || '';
-    const parts = [];
-    for (let i = 0, len = match.length; i < len; i += 4) {
-      parts.push(match.substring(i, i + 4));
-    }
-    if (parts.length) {
-      return parts.join(' ');
-    } else {
-      return v;
-    }
-  };
-
-  // Format expiry date
-  const formatExpiryDate = (value: string) => {
-    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-    if (v.length >= 2) {
-      return v.substring(0, 2) + '/' + v.substring(2, 4);
-    }
-    return v;
-  };
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    // Basic validation
-    if (!cardNumber || !expiryDate || !cvv || !zipCode || !email) {
-      setError("All fields are required");
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      // Create payment data for Dodo
-      const paymentData = {
-        amount: selectedPackage.price * 100, // Convert to cents
-        currency: 'usd',
-        packageId: selectedPackage.id,
-        packageName: selectedPackage.name,
-        cardNumber: cardNumber.replace(/\s/g, ''),
-        expiryDate,
-        cvv,
-        zipCode,
-        email,
-        metadata: {
-          packageId: selectedPackage.id,
-          packageName: selectedPackage.name,
-          originalPrice: selectedPackage.originalPrice,
-          price: selectedPackage.price
-        }
-      };
-
-      // Call Dodo payment API
-      const response = await fetch('/api/dodo/create-payment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(paymentData)
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        // Payment successful
-        onPaymentSuccess();
-      } else {
-        setError(result.error || "Payment failed. Please try again.");
-      }
-    } catch (err) {
-      console.error('Payment error:', err);
-      setError("Payment failed. Please try again.");
-    }
-
-    setIsLoading(false);
-  };
-
-  return (
-    <div className="space-y-6">
-      <LivePayPalCheckout
-        selectedPackage={selectedPackage}
-        onPaymentSuccess={onPaymentSuccess}
-        onPaymentError={(error) => {
-          console.error('PayPal payment error:', error);
-          showNotification('error', 'Payment failed. Please try again.');
-        }}
-        onPaymentCancel={(data) => {
-          console.log('Payment cancelled:', data);
-          showNotification('info', 'Payment was cancelled.');
-        }}
-      />
-
-      {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-          <p className="text-red-600 text-sm">{error}</p>
-        </div>
-      )}
-    </div>
-  );
-}
 
 function TrustBadges() {
   return (
@@ -333,7 +210,7 @@ function CheckoutContent() {
 
       // Track subscription with full tracking (Meta + Reddit client-side + Reddit server-side)
       await trackSubscribeCombinedFull(
-        selectedPackage.price,
+        1.00, // Test payment amount
         'USD',
         selectedPackage.name,
         transactionId,
@@ -602,9 +479,9 @@ function CheckoutContent() {
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-white/70">Today's Price</span>
+                    <span className="text-white/70">Test Price</span>
                     <span className="text-[#d4ae36] font-semibold">
-                      ${selectedPackage.price}
+                      $1.00
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm font-medium">
@@ -617,7 +494,7 @@ function CheckoutContent() {
 
                 <div className="flex items-center justify-between text-lg font-bold">
                   <span className="text-white">Total</span>
-                  <span className="text-[#d4ae36]">${selectedPackage.price}</span>
+                  <span className="text-[#d4ae36]">$1.00</span>
                 </div>
               </CardContent>
             </Card>
@@ -677,11 +554,17 @@ function CheckoutContent() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <PaymentForm
+                <LivePayPalCheckout
                   selectedPackage={selectedPackage}
                   onPaymentSuccess={handlePaymentSuccess}
-                  showNotification={showNotification}
-                  onboardingFormData={onboardingFormData}
+                  onPaymentError={(error) => {
+                    console.error('PayPal payment error:', error);
+                    showNotification('error', 'Payment failed. Please try again.');
+                  }}
+                  onPaymentCancel={(data) => {
+                    console.log('Payment cancelled:', data);
+                    showNotification('info', 'Payment was cancelled.');
+                  }}
                 />
               </CardContent>
             </Card>
@@ -708,7 +591,7 @@ function CheckoutContent() {
 
           <span className="relative z-20 text-white font-bold drop-shadow-lg flex items-center justify-center">
             <Lock className="w-4 h-4 mr-2" />
-            Pay ${selectedPackage.price} Now
+            Pay $1.00 Now
           </span>
         </button>
       </div>
@@ -728,11 +611,17 @@ function CheckoutContent() {
                 ✕
               </Button>
             </div>
-            <PaymentForm
+            <LivePayPalCheckout
               selectedPackage={selectedPackage}
               onPaymentSuccess={handlePaymentSuccess}
-              showNotification={showNotification}
-              onboardingFormData={onboardingFormData}
+              onPaymentError={(error) => {
+                console.error('PayPal payment error:', error);
+                showNotification('error', 'Payment failed. Please try again.');
+              }}
+              onPaymentCancel={(data) => {
+                console.log('Payment cancelled:', data);
+                showNotification('info', 'Payment was cancelled.');
+              }}
             />
           </div>
         </div>

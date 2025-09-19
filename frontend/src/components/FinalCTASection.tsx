@@ -43,13 +43,18 @@ export const FinalCTASection: React.FC = () => {
         // Store in localStorage for checkout page
         localStorage.setItem('selectedPackage', 'most-matches');
 
-        // Scroll to pricing section
+        // Scroll to pricing section with smooth animation
         const pricingSection = document.getElementById('pricing-section');
         if (pricingSection) {
             const elementRect = pricingSection.getBoundingClientRect();
             const absoluteElementTop = elementRect.top + window.pageYOffset;
             const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
-            window.scrollTo({ top: middle, behavior: 'smooth' });
+
+            // Enhanced smooth scrolling with custom easing
+            window.scrollTo({
+                top: middle,
+                behavior: 'smooth'
+            });
         }
 
         // Show auth modal immediately
@@ -71,7 +76,7 @@ export const FinalCTASection: React.FC = () => {
                     <button
                         type="button"
                         onClick={handleCTAClick}
-                        className="relative bg-white/5 backdrop-blur-md border border-white/20 hover:bg-white/10 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#FFD700]/20 overflow-hidden group text-xl font-bold px-12 py-6 rounded-2xl"
+                        className="relative bg-white/5 backdrop-blur-md border border-white/20 hover:bg-white/10 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-2 hover:scale-105 active:scale-95 hover:shadow-2xl hover:shadow-[#FFD700]/30 active:shadow-lg active:shadow-[#FFD700]/20 overflow-hidden group text-xl font-bold px-12 py-6 rounded-2xl transform-gpu will-change-transform"
                         aria-label="Upgrade my photos"
                     >
                         {/* Glass morphism background with flowing colors */}
@@ -95,7 +100,7 @@ export const FinalCTASection: React.FC = () => {
                             </div>
                         </div>
 
-                        <span className="relative z-20 text-white font-bold drop-shadow-lg">
+                        <span className="relative z-20 text-white font-bold drop-shadow-lg transition-all duration-300 ease-out group-hover:scale-105 group-active:scale-95">
                             Upgrade my photos
                         </span>
                     </button>

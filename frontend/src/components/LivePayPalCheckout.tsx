@@ -25,7 +25,7 @@ export default function LivePayPalCheckout({
     clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!,
     currency: "USD",
     intent: "capture" as const,
-    enableFunding: "paypal,venmo,card",
+    enableFunding: "paypal,card",
     components: "buttons" as const,
     debug: false
   };

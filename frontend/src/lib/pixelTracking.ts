@@ -103,6 +103,12 @@ export const trackRedditConversionServer = async (
         custom_data?: any;
     } = {}
 ) => {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined') {
+        console.warn('Reddit Conversion API: Not available in server environment');
+        return false;
+    }
+
     try {
         const response = await fetch('/api/reddit-conversion', {
             method: 'POST',
@@ -115,15 +121,21 @@ export const trackRedditConversionServer = async (
             })
         });
 
-        const result = await response.json();
-        if (result.success) {
-            console.log(`✅ Reddit Conversion API: ${eventType} tracked successfully`);
-        } else {
-            console.error(`❌ Reddit Conversion API: Failed to track ${eventType}`, result.error);
+        if (!response.ok) {
+            console.warn(`Reddit Conversion API: HTTP ${response.status} - ${response.statusText}`);
+            return false;
         }
-        return result.success;
+
+        const result = await response.json();
+        if (result && result.success) {
+            console.log(`✅ Reddit Conversion API: ${eventType} tracked successfully`);
+            return true;
+        } else {
+            console.warn(`Reddit Conversion API: Failed to track ${eventType}`, result?.error || 'Unknown error');
+            return false;
+        }
     } catch (error) {
-        console.error(`❌ Reddit Conversion API Exception for ${eventType}:`, error);
+        console.warn(`Reddit Conversion API Exception for ${eventType}:`, error);
         return false;
     }
 };
@@ -139,14 +151,18 @@ export const trackPurchaseCombinedFull = async (
     // Client-side tracking
     trackPurchaseCombined(value, currency, packageName);
 
-    // Server-side Reddit tracking
-    await trackRedditConversionServer('purchase', {
-        email,
-        value,
-        currency,
-        package_name: packageName,
-        transaction_id: transactionId
-    });
+    // Server-side Reddit tracking (non-blocking)
+    try {
+        await trackRedditConversionServer('purchase', {
+            email,
+            value,
+            currency,
+            package_name: packageName,
+            transaction_id: transactionId
+        });
+    } catch (error) {
+        console.warn('Reddit tracking failed (non-blocking):', error);
+    }
 };
 
 export const trackSubscribeCombinedFull = async (
@@ -159,14 +175,19 @@ export const trackSubscribeCombinedFull = async (
     // Client-side tracking
     trackSubscribeCombined(value, currency, packageName);
 
-    // Server-side Reddit tracking
-    await trackRedditConversionServer('purchase', {
-        email,
-        value,
-        currency,
-        package_name: packageName,
-        transaction_id: transactionId
-    });
+    // Server-side Reddit tracking (non-blocking)
+    try {
+        await trackRedditConversionServer('purchase', {
+            email,
+            value,
+            currency,
+            package_name: packageName,
+            transaction_id: transactionId
+        });
+    } catch (error) {
+        // Silently handle Reddit tracking errors to not block the payment flow
+        console.warn('Reddit tracking failed (non-blocking):', error);
+    }
 };
 
 export const trackLeadCombinedFull = async (
@@ -177,12 +198,16 @@ export const trackLeadCombinedFull = async (
     // Client-side tracking
     trackLeadCombined(source);
 
-    // Server-side Reddit tracking
-    await trackRedditConversionServer('lead', {
-        email,
-        phone,
-        custom_data: { lead_source: source }
-    });
+    // Server-side Reddit tracking (non-blocking)
+    try {
+        await trackRedditConversionServer('lead', {
+            email,
+            phone,
+            custom_data: { lead_source: source }
+        });
+    } catch (error) {
+        console.warn('Reddit tracking failed (non-blocking):', error);
+    }
 };
 
 export const trackInitiateCheckoutCombinedFull = async (
@@ -193,12 +218,16 @@ export const trackInitiateCheckoutCombinedFull = async (
     // Client-side tracking
     trackInitiateCheckoutCombined(formType);
 
-    // Server-side Reddit tracking
-    await trackRedditConversionServer('initiate_checkout', {
-        email,
-        package_name: packageName,
-        custom_data: { form_type: formType }
-    });
+    // Server-side Reddit tracking (non-blocking)
+    try {
+        await trackRedditConversionServer('initiate_checkout', {
+            email,
+            package_name: packageName,
+            custom_data: { form_type: formType }
+        });
+    } catch (error) {
+        console.warn('Reddit tracking failed (non-blocking):', error);
+    }
 };
 
 export const trackCompleteRegistrationCombinedFull = async (
@@ -209,10 +238,14 @@ export const trackCompleteRegistrationCombinedFull = async (
     // Client-side tracking
     trackCompleteRegistrationCombined(formData);
 
-    // Server-side Reddit tracking
-    await trackRedditConversionServer('complete_registration', {
-        email,
-        phone,
-        custom_data: formData
-    });
+    // Server-side Reddit tracking (non-blocking)
+    try {
+        await trackRedditConversionServer('complete_registration', {
+            email,
+            phone,
+            custom_data: formData
+        });
+    } catch (error) {
+        console.warn('Reddit tracking failed (non-blocking):', error);
+    }
 };

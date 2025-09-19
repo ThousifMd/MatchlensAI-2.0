@@ -8,7 +8,9 @@ export const metadata: Metadata = {
         'X-Frame-Options': 'DENY',
         'X-Content-Type-Options': 'nosniff',
         'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Content-Security-Policy': "upgrade-insecure-requests; frame-ancestors 'none';",
     },
+    viewport: "width=device-width, initial-scale=1, viewport-fit=cover",
 };
 
 export default function CheckoutLayout({
@@ -18,14 +20,6 @@ export default function CheckoutLayout({
 }) {
     return (
         <div className="min-h-screen bg-black">
-            {/* Security headers for payment processing */}
-            <head>
-                <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests; frame-ancestors 'none';" />
-                <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
-                <meta httpEquiv="X-Frame-Options" content="DENY" />
-                <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
-                <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-            </head>
             {children}
         </div>
     );
