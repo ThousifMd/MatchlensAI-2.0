@@ -381,17 +381,14 @@ function OnboardingContent() {
 
         console.log("✅ Onboarding flow completed successfully with ID:", result.onboardingId);
 
-        // Show success message
-        alert('✅ Onboarding completed successfully! Your data has been saved.');
-
         // Clear payment verification flag after successful submission
         if (typeof window !== 'undefined') {
           localStorage.removeItem('paymentCompleted');
           localStorage.removeItem('lastPaymentId'); // Also clear the payment ID
         }
 
-        // Redirect to homepage after form completion
-        router.push('/');
+        // Redirect to success page
+        router.push('/onboarding/success');
       } catch (error) {
         console.error('Error submitting form data:', error);
         alert('Failed to submit form data. Please try again.');

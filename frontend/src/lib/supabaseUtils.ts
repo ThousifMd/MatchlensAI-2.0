@@ -106,6 +106,9 @@ export async function storePaymentData(paymentData: Omit<PaymentData, 'payment_i
 export async function storeOnboardingData(onboardingData: Omit<OnboardingData, 'id' | 'created_at'>): Promise<{ success: boolean; data?: OnboardingData; error?: string }> {
     try {
         console.log('📝 Storing onboarding data:', onboardingData)
+        console.log('🔧 Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+        console.log('🔧 Supabase Key exists:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+        console.log('🔧 isSupabaseConfigured():', isSupabaseConfigured())
 
         // Validate required fields
         const requiredFields = ['payment_id', 'name', 'email', 'phone']
@@ -210,21 +213,24 @@ export async function completeOnboardingFlow(
     try {
         console.log('🚀 Starting complete onboarding flow...')
 
-        // Check if Supabase is configured or if this is a local payment
-        if (!isSupabaseConfigured() || onboardingData.payment_id.startsWith('local_')) {
-            console.log('⚠️ Supabase not configured or local payment. Logging onboarding data to console and localStorage.')
-            console.log('📝 ONBOARDING DATA:', onboardingData)
-            console.log('📸 Profile photos:', profilePhotos.length)
-            console.log('📱 Screenshots:', screenshots.length)
-            localStorage.setItem('lastOnboardingData', JSON.stringify(onboardingData))
-            localStorage.setItem('lastProfilePhotos', JSON.stringify(profilePhotos.map(f => ({ name: f.name, size: f.size, type: f.type }))))
-            localStorage.setItem('lastScreenshots', JSON.stringify(screenshots.map(f => ({ name: f.name, size: f.size, type: f.type }))))
-            return { success: true, onboardingId: 'local-' + Date.now() }
-        }
+        // Always try to write to Supabase, even if configuration check fails
+        console.log('🔄 Attempting to write to Supabase...')
+        console.log('📝 ONBOARDING DATA:', onboardingData)
+        console.log('📸 Profile photos:', profilePhotos.length)
+        console.log('📱 Screenshots:', screenshots.length)
+        
+        // Also store in localStorage as backup
+        localStorage.setItem('lastOnboardingData', JSON.stringify(onboardingData))
+        localStorage.setItem('lastProfilePhotos', JSON.stringify(profilePhotos.map(f => ({ name: f.name, size: f.size, type: f.type }))))
+        localStorage.setItem('lastScreenshots', JSON.stringify(screenshots.map(f => ({ name: f.name, size: f.size, type: f.type }))))
 
         // Step 1: Store onboarding data
+        console.log('📊 Attempting to store onboarding data in Supabase...')
         const onboardingResult = await storeOnboardingData(onboardingData)
+        console.log('📊 storeOnboardingData result:', onboardingResult)
+        
         if (!onboardingResult.success || !onboardingResult.data) {
+            console.error('❌ Failed to store onboarding data:', onboardingResult.error)
             return { success: false, error: onboardingResult.error || 'Failed to store onboarding data' }
         }
 
