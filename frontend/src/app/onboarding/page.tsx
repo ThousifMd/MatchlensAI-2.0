@@ -366,7 +366,8 @@ function OnboardingContent() {
         console.log("🔧 Environment check - Supabase Key exists:", !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
         console.log("🔄 Calling API route directly...");
-        
+        console.log("📤 Sending data:", JSON.stringify(onboardingData, null, 2));
+
         // Use API route directly instead of frontend Supabase
         try {
           const response = await fetch('/api/onboarding/store', {
@@ -376,6 +377,9 @@ function OnboardingContent() {
             },
             body: JSON.stringify(onboardingData)
           });
+
+          console.log("📡 Response status:", response.status);
+          console.log("📡 Response ok:", response.ok);
 
           if (!response.ok) {
             const errorData = await response.json();
@@ -387,7 +391,7 @@ function OnboardingContent() {
 
           const result = await response.json();
           console.log("✅ API route succeeded:", result);
-          
+
           // Store result for success message
           const onboardingId = result.data.id;
           console.log("✅ Onboarding data stored with ID:", onboardingId);

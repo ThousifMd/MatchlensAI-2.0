@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Use both NEXT_PUBLIC_ and non-public versions to ensure we get the variables
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || 'https://gykvrhhbxbzhvizivyfu.supabase.co';
+// Use environment variables from Vercel (no hardcoded values)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
         const body = await request.json();
         console.log('📝 Received data:', body);
-        
+
         // Log environment variables for debugging
         console.log('🔧 All environment variables:');
         console.log('  NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
@@ -27,8 +27,8 @@ export async function POST(request: NextRequest) {
         if (!supabaseUrl || !supabaseKey) {
             console.error('❌ Missing Supabase credentials');
             return NextResponse.json(
-                { 
-                    success: false, 
+                {
+                    success: false,
                     error: 'Missing Supabase credentials',
                     details: {
                         url: !!supabaseUrl,
@@ -45,8 +45,8 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Validate required fields
-        const requiredFields = ['payment_id', 'name', 'email', 'phone'];
+        // Validate required fields (phone is optional)
+        const requiredFields = ['payment_id', 'name', 'email'];
         for (const field of requiredFields) {
             if (!body[field]) {
                 console.error(`❌ Missing required field: ${field}`);
@@ -79,6 +79,7 @@ export async function POST(request: NextRequest) {
         };
 
         console.log('📝 Cleaned data:', cleanData);
+        console.log('📝 Data to insert:', JSON.stringify(cleanData, null, 2));
 
         // Insert into Supabase
         const { data, error } = await supabase
@@ -89,8 +90,14 @@ export async function POST(request: NextRequest) {
 
         if (error) {
             console.error('❌ Supabase error:', error);
+            console.error('❌ Error details:', JSON.stringify(error, null, 2));
             return NextResponse.json(
-                { success: false, error: error.message },
+                {
+                    success: false,
+                    error: error.message,
+                    details: error,
+                    dataSent: cleanData
+                },
                 { status: 500 }
             );
         }

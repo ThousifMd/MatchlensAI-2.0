@@ -117,9 +117,19 @@ export default function SimplePayPalCheckout({ selectedPackage, showNotification
                 screenshotPhotos: screenshotPhotosBase64
             };
 
+            // Generate a UUID for payment_id
+            const generateUUID = () => {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                    const r = Math.random() * 16 | 0;
+                    const v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+            };
+
             // STEP 1: Store payment data in Supabase
             const paymentData = {
-                order_id: paymentDetails.id,
+                payment_id: generateUUID(), // Generate proper UUID
+                order_id: paymentDetails.id, // Keep PayPal order ID as order_id
                 amount: parseFloat(actualAmountPaid), // Use the actual amount paid
                 currency: 'USD',
                 package_id: selectedPackage?.id || '',
@@ -142,7 +152,10 @@ export default function SimplePayPalCheckout({ selectedPackage, showNotification
 
             // Set payment verification flag
             localStorage.setItem('paymentCompleted', 'true');
-            localStorage.setItem('lastPaymentId', paymentResult.data?.payment_id || ''); // Store payment_id for onboarding
+            // Store the actual payment_id from database response directly
+            const actualPaymentId = paymentResult.data?.payment_id;
+            console.log("💾 Using payment_id from database:", actualPaymentId);
+            localStorage.setItem('lastPaymentId', actualPaymentId);
 
             // Clear stored data after successful payment
             localStorage.removeItem('onboardingFormData');

@@ -69,14 +69,14 @@ export async function uploadFiles(
 /**
  * Store payment data in Supabase
  */
-export async function storePaymentData(paymentData: Omit<PaymentData, 'payment_id' | 'created_at'>): Promise<{ success: boolean; data?: PaymentData; error?: string }> {
+export async function storePaymentData(paymentData: Omit<PaymentData, 'created_at'>): Promise<{ success: boolean; data?: PaymentData; error?: string }> {
     try {
         // Check if Supabase is configured
         if (!isSupabaseConfigured()) {
             console.log('⚠️ Supabase not configured. Logging payment data to console and localStorage.')
             console.log('💳 PAYMENT DATA:', paymentData)
             localStorage.setItem('lastPaymentData', JSON.stringify(paymentData))
-            return { success: true, data: { ...paymentData, payment_id: 'local-' + Date.now() } as PaymentData }
+            return { success: true, data: { ...paymentData, payment_id: paymentData.payment_id || 'local-' + Date.now() } as PaymentData }
         }
 
         console.log('💳 Storing payment data:', paymentData)
