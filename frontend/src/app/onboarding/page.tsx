@@ -365,23 +365,41 @@ function OnboardingContent() {
         console.log("🔧 Environment check - Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
         console.log("🔧 Environment check - Supabase Key exists:", !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
-        console.log("🔄 Calling completeOnboardingFlow...");
-        const result = await completeOnboardingFlow(
-          onboardingData,
-          formData.photos,
-          formData.screenshots
-        );
+        console.log("🔄 Calling API route directly...");
+        
+        // Use API route directly instead of frontend Supabase
+        try {
+          const response = await fetch('/api/onboarding/store', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(onboardingData)
+          });
 
-        console.log("📊 completeOnboardingFlow result:", result);
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error("❌ API route failed:", errorData);
+            alert(`Failed to submit form data: ${errorData.error || 'Unknown error'}. Please try again.`);
+            setIsSubmitting(false);
+            return;
+          }
 
-        if (!result.success) {
-          console.error("❌ Failed to complete onboarding flow:", result.error);
-          alert(`Failed to submit form data: ${result.error || 'Unknown error'}. Please try again.`);
-          setIsSubmitting(false); // Reset submission state on error
+          const result = await response.json();
+          console.log("✅ API route succeeded:", result);
+          
+          // Store result for success message
+          const onboardingId = result.data.id;
+          console.log("✅ Onboarding data stored with ID:", onboardingId);
+
+        } catch (apiError) {
+          console.error("❌ API route exception:", apiError);
+          alert(`Failed to submit form data: ${apiError instanceof Error ? apiError.message : 'Unknown error'}. Please try again.`);
+          setIsSubmitting(false);
           return;
         }
 
-        console.log("✅ Onboarding flow completed successfully with ID:", result.onboardingId);
+        console.log("✅ Onboarding flow completed successfully!");
 
         // Clear payment verification flag after successful submission
         if (typeof window !== 'undefined') {

@@ -12,6 +12,10 @@ export async function POST(request: NextRequest) {
 
         const body = await request.json();
         console.log('📝 Received data:', body);
+        
+        // Log environment variables for debugging
+        console.log('🔧 Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+        console.log('🔧 Supabase Key exists:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
         // Validate required fields
         const requiredFields = ['payment_id', 'name', 'email', 'phone'];
