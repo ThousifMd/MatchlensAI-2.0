@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Check, Shield } from "lucide-react";
 import { usePackage, Package } from "@/contexts/PackageContext";
 import { trackAddToCart, trackCTAClick, trackLead } from "@/lib/metaPixel";
-import { useUser } from '@clerk/nextjs';
+// Conditional Clerk import
 import AuthModal from "./AuthModal";
 
 const pricingTiers = [
@@ -75,7 +75,15 @@ export const PricingSection = () => {
   const [localSelectedPackage, setLocalSelectedPackage] = React.useState<string | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [pendingPackageId, setPendingPackageId] = useState<string | null>(null);
-  const { isSignedIn, isLoaded } = useUser();
+  // Check if Clerk is configured
+  const isClerkConfigured = () => {
+    return process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
+      process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY !== 'pk_test_placeholder';
+  };
+  
+  // Conditional user state
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(true);
 
   const handlePackageSelect = (packageId: string) => {
     setLocalSelectedPackage(packageId);

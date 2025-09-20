@@ -6,8 +6,30 @@ import { Sparkles } from "lucide-react"
 import { trackCTAClick } from "@/lib/metaPixel"
 import { trackCTAClickCombined, trackAddToCartCombined } from "@/lib/pixelTracking"
 import { usePackage } from "@/contexts/PackageContext"
-import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+// Clerk imports will be handled conditionally
 import AuthModal from "./AuthModal"
+import dynamic from 'next/dynamic'
+
+// Dynamically import Clerk components only when needed
+const ClerkUserButton = dynamic(
+  () => import('@clerk/nextjs').then((mod) => {
+    const { SignedIn, UserButton } = mod;
+    return function ClerkUserButtonComponent() {
+      return (
+        <SignedIn>
+          <UserButton
+            appearance={{
+              elements: {
+                avatarBox: "w-10 h-10"
+              }
+            }}
+          />
+        </SignedIn>
+      );
+    };
+  }),
+  { ssr: false }
+)
 
 // Check if Clerk is configured
 const isClerkConfigured = () => {
@@ -130,15 +152,7 @@ export default function Navbar({ ctaHref, className }: NavbarProps) {
                 </button>
 
                 {/* User button for authenticated users */}
-                <SignedIn>
-                  <UserButton
-                    appearance={{
-                      elements: {
-                        avatarBox: "w-10 h-10"
-                      }
-                    }}
-                  />
-                </SignedIn>
+                <ClerkUserButton />
               </>
             ) : (
               /* Fallback CTA when Clerk is not configured */

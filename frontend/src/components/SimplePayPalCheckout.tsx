@@ -155,7 +155,9 @@ export default function SimplePayPalCheckout({ selectedPackage, showNotification
             // Store the actual payment_id from database response directly
             const actualPaymentId = paymentResult.data?.payment_id;
             console.log("💾 Using payment_id from database:", actualPaymentId);
-            localStorage.setItem('lastPaymentId', actualPaymentId);
+            if (actualPaymentId) {
+                localStorage.setItem('lastPaymentId', actualPaymentId);
+            }
 
             // Clear stored data after successful payment
             localStorage.removeItem('onboardingFormData');

@@ -284,10 +284,11 @@ export default function RootLayout({
           data-debug="true"
           data-custom-data='{"appName": "YourApp", "version": "1.0.0", "greeting": "hi"}'
         />
-        <ClerkProvider
-          publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_test_placeholder'}
-          signInFallbackRedirectUrl="/checkout"
-          signUpFallbackRedirectUrl="/checkout"
+        {process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY !== 'pk_test_placeholder' ? (
+          <ClerkProvider
+            publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+            signInFallbackRedirectUrl="/checkout"
+            signUpFallbackRedirectUrl="/checkout"
           appearance={{
             baseTheme: undefined,
             variables: {
@@ -369,10 +370,15 @@ export default function RootLayout({
             }
           }}
         >
+            <PackageProvider>
+              {children}
+            </PackageProvider>
+          </ClerkProvider>
+        ) : (
           <PackageProvider>
             {children}
           </PackageProvider>
-        </ClerkProvider>
+        )}
       </body>
     </html>
   );
