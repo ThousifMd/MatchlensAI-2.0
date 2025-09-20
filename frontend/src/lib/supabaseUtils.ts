@@ -218,6 +218,9 @@ export async function completeOnboardingFlow(
         console.log('📝 ONBOARDING DATA:', onboardingData)
         console.log('📸 Profile photos:', profilePhotos.length)
         console.log('📱 Screenshots:', screenshots.length)
+        console.log('🔧 Supabase URL from supabaseUtils:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+        console.log('🔧 Supabase Key exists from supabaseUtils:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+        console.log('🔧 isSupabaseConfigured result:', isSupabaseConfigured())
         
         // Also store in localStorage as backup
         localStorage.setItem('lastOnboardingData', JSON.stringify(onboardingData))
@@ -230,8 +233,33 @@ export async function completeOnboardingFlow(
         console.log('📊 storeOnboardingData result:', onboardingResult)
         
         if (!onboardingResult.success || !onboardingResult.data) {
-            console.error('❌ Failed to store onboarding data:', onboardingResult.error)
-            return { success: false, error: onboardingResult.error || 'Failed to store onboarding data' }
+            console.error('❌ Failed to store onboarding data directly:', onboardingResult.error)
+            console.log('🔄 Trying API route fallback...')
+            
+            // Try API route fallback
+            try {
+                const response = await fetch('/api/onboarding/store', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(onboardingData)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('❌ API route also failed:', errorData);
+                    return { success: false, error: errorData.error || 'Both direct and API route failed' }
+                }
+                
+                const apiResult = await response.json();
+                console.log('✅ API route succeeded:', apiResult);
+                onboardingResult.data = apiResult.data;
+                onboardingResult.success = true;
+            } catch (apiError) {
+                console.error('❌ API route exception:', apiError);
+                return { success: false, error: onboardingResult.error || 'Failed to store onboarding data' }
+            }
         }
 
         const onboardingId = onboardingResult.data.id!
