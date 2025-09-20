@@ -9,7 +9,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 export async function POST(request: NextRequest) {
     try {
         console.log('🚀 API Route: Storing onboarding data...');
-        
+
         const body = await request.json();
         console.log('📝 Received data:', body);
 

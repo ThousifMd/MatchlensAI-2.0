@@ -151,17 +151,17 @@ export async function storeOnboardingData(onboardingData: Omit<OnboardingData, '
         if (error) {
             console.error('❌ Onboarding storage error:', error)
             console.error('❌ Error details:', JSON.stringify(error, null, 2))
-            
+
             // Fallback: Store in localStorage if Supabase fails
             console.log('🔄 Falling back to localStorage storage...')
             localStorage.setItem('onboardingData', JSON.stringify(cleanData))
             localStorage.setItem('onboardingTimestamp', Date.now().toString())
-            
+
             // Return success with mock data
-            return { 
-                success: true, 
-                data: { 
-                    ...cleanData, 
+            return {
+                success: true,
+                data: {
+                    ...cleanData,
                     id: 'local-' + Date.now(),
                     created_at: new Date().toISOString()
                 } as OnboardingData
@@ -221,7 +221,7 @@ export async function completeOnboardingFlow(
         console.log('🔧 Supabase URL from supabaseUtils:', process.env.NEXT_PUBLIC_SUPABASE_URL)
         console.log('🔧 Supabase Key exists from supabaseUtils:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
         console.log('🔧 isSupabaseConfigured result:', isSupabaseConfigured())
-        
+
         // Also store in localStorage as backup
         localStorage.setItem('lastOnboardingData', JSON.stringify(onboardingData))
         localStorage.setItem('lastProfilePhotos', JSON.stringify(profilePhotos.map(f => ({ name: f.name, size: f.size, type: f.type }))))
@@ -231,11 +231,11 @@ export async function completeOnboardingFlow(
         console.log('📊 Attempting to store onboarding data in Supabase...')
         const onboardingResult = await storeOnboardingData(onboardingData)
         console.log('📊 storeOnboardingData result:', onboardingResult)
-        
+
         if (!onboardingResult.success || !onboardingResult.data) {
             console.error('❌ Failed to store onboarding data directly:', onboardingResult.error)
             console.log('🔄 Trying API route fallback...')
-            
+
             // Try API route fallback
             try {
                 const response = await fetch('/api/onboarding/store', {
@@ -245,13 +245,13 @@ export async function completeOnboardingFlow(
                     },
                     body: JSON.stringify(onboardingData)
                 });
-                
+
                 if (!response.ok) {
                     const errorData = await response.json();
                     console.error('❌ API route also failed:', errorData);
                     return { success: false, error: errorData.error || 'Both direct and API route failed' }
                 }
-                
+
                 const apiResult = await response.json();
                 console.log('✅ API route succeeded:', apiResult);
                 onboardingResult.data = apiResult.data;
