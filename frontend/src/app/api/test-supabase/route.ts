@@ -5,8 +5,9 @@ export async function GET(request: NextRequest) {
     try {
         console.log('🧪 Testing Supabase connection in deployed environment...');
         
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+        // Try multiple environment variable names
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || 'https://gykvrhhbxbzhvizivyfu.supabase.co';
+        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
         
         console.log('🔧 Supabase URL:', supabaseUrl);
         console.log('🔧 Supabase Key exists:', !!supabaseKey);

@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+// Use both NEXT_PUBLIC_ and non-public versions to ensure we get the variables
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || 'https://gykvrhhbxbzhvizivyfu.supabase.co';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -14,8 +15,35 @@ export async function POST(request: NextRequest) {
         console.log('📝 Received data:', body);
         
         // Log environment variables for debugging
-        console.log('🔧 Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
-        console.log('🔧 Supabase Key exists:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+        console.log('🔧 All environment variables:');
+        console.log('  NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+        console.log('  SUPABASE_URL:', process.env.SUPABASE_URL);
+        console.log('  NEXT_PUBLIC_SUPABASE_ANON_KEY exists:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+        console.log('  SUPABASE_ANON_KEY exists:', !!process.env.SUPABASE_ANON_KEY);
+        console.log('🔧 Using URL:', supabaseUrl);
+        console.log('🔧 Using Key exists:', !!supabaseKey);
+
+        // Check if Supabase credentials are available
+        if (!supabaseUrl || !supabaseKey) {
+            console.error('❌ Missing Supabase credentials');
+            return NextResponse.json(
+                { 
+                    success: false, 
+                    error: 'Missing Supabase credentials',
+                    details: {
+                        url: !!supabaseUrl,
+                        key: !!supabaseKey,
+                        envVars: {
+                            NEXT_PUBLIC_SUPABASE_URL: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+                            SUPABASE_URL: !!process.env.SUPABASE_URL,
+                            NEXT_PUBLIC_SUPABASE_ANON_KEY: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+                            SUPABASE_ANON_KEY: !!process.env.SUPABASE_ANON_KEY
+                        }
+                    }
+                },
+                { status: 500 }
+            );
+        }
 
         // Validate required fields
         const requiredFields = ['payment_id', 'name', 'email', 'phone'];
