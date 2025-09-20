@@ -262,6 +262,11 @@ export async function completeOnboardingFlow(
             }
         }
 
+        if (!onboardingResult.data) {
+            console.error('❌ No data returned from onboarding storage');
+            return { success: false, error: 'No data returned from onboarding storage' }
+        }
+
         const onboardingId = onboardingResult.data.id!
         const paymentId = onboardingResult.data.payment_id!
         console.log('✅ Onboarding data stored with ID:', onboardingId, 'and payment_id:', paymentId)
