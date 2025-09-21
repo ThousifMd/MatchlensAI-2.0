@@ -43,21 +43,7 @@ export const FinalCTASection: React.FC = () => {
         // Store in localStorage for checkout page
         localStorage.setItem('selectedPackage', 'most-matches');
 
-        // Scroll to pricing section with smooth animation
-        const pricingSection = document.getElementById('pricing-section');
-        if (pricingSection) {
-            const elementRect = pricingSection.getBoundingClientRect();
-            const absoluteElementTop = elementRect.top + window.pageYOffset;
-            const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
-
-            // Enhanced smooth scrolling with custom easing
-            window.scrollTo({
-                top: middle,
-                behavior: 'smooth'
-            });
-        }
-
-        // Show auth modal immediately
+        // Show auth modal first
         setShowAuthModal(true);
     };
 
@@ -113,8 +99,8 @@ export const FinalCTASection: React.FC = () => {
                 onClose={() => setShowAuthModal(false)}
                 onSuccess={() => {
                     setShowAuthModal(false);
-                    // Redirect to checkout after successful auth
-                    window.location.href = '/checkout';
+                    // Redirect to onboarding after successful auth
+                    window.location.href = '/onboarding';
                 }}
             />
         </section>

@@ -16,49 +16,8 @@ export default function HeroSection({ ctaHref, className }: HeroSectionProps) {
 
   const handleCTA = () => {
     trackCTAClickCombined("Make Me A Match Magnet", "Hero Section");
-
-    // Auto-select the "Most Attention" package ($69)
-    const mostAttentionPackage = {
-      id: "most-matches",
-      name: "Most Attention",
-      price: 69,
-      originalPrice: 119,
-      description: "Most popular choice",
-      features: [
-        "10 enhanced photos",
-        "6 style variations",
-        "Bio optimization",
-        "Profile strategy guide",
-        "Private and secure"
-      ],
-      buttonText: "Make my profile irresistible",
-      popular: true,
-      mobileOrder: 1
-    };
-
-    setSelectedPackage(mostAttentionPackage);
-
-    // Track package selection
-    trackAddToCartCombined("Most Attention", 69);
-
-    // Store in localStorage for checkout page
-    localStorage.setItem('selectedPackage', 'most-matches');
-
-    // Scroll to pricing section with smooth animation
-    const pricingSection = document.getElementById('pricing-section');
-    if (pricingSection) {
-      const elementRect = pricingSection.getBoundingClientRect();
-      const absoluteElementTop = elementRect.top + window.pageYOffset;
-      const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
-
-      // Enhanced smooth scrolling with custom easing
-      window.scrollTo({
-        top: middle,
-        behavior: 'smooth'
-      });
-    }
-
-    // Show auth modal immediately
+    
+    // Show auth modal first
     setShowAuthModal(true);
   };
 
@@ -154,8 +113,8 @@ export default function HeroSection({ ctaHref, className }: HeroSectionProps) {
         onClose={() => setShowAuthModal(false)}
         onSuccess={() => {
           setShowAuthModal(false);
-          // Redirect to checkout after successful auth
-          window.location.href = '/checkout';
+          // Redirect to onboarding after successful auth
+          window.location.href = '/onboarding';
         }}
       />
     </section>

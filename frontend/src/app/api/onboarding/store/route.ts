@@ -45,21 +45,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Check if using legacy API key format
-        if (supabaseKey.startsWith('sb_secret_')) {
-            console.error('❌ Legacy API keys are disabled. Please update to new JWT format keys.');
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: 'Legacy API keys are disabled. Please update to new JWT format keys.',
-                    details: {
-                        keyFormat: 'legacy',
-                        message: 'Supabase has deprecated legacy API keys. Please get new JWT format keys from your Supabase dashboard.'
-                    }
-                },
-                { status: 500 }
-            );
-        }
+        // Remove legacy key detection - let Supabase handle it
 
         // Validate required fields (phone is optional)
         const requiredFields = ['payment_id', 'name', 'email'];

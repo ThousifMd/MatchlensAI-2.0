@@ -4,29 +4,29 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle, Sparkles, Clock, Mail, Shield, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import PricingSection from '@/components/PricingSection';
 
 export default function OnboardingSuccessPage() {
   const router = useRouter();
   const [countdown, setCountdown] = useState(10);
 
   useEffect(() => {
-    // Auto-redirect after 10 seconds
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          router.push('/');
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    // Auto-scroll to pricing section after 3 seconds
+    const timer = setTimeout(() => {
+      const pricingSection = document.getElementById('pricing-section');
+      if (pricingSection) {
+        pricingSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 3000);
 
-    return () => clearInterval(timer);
-  }, [router]);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
-      <div className="max-w-2xl mx-auto text-center space-y-8">
+    <div className="min-h-screen bg-black text-white">
+      {/* Success Section */}
+      <div className="flex items-center justify-center p-4 py-16">
+        <div className="max-w-2xl mx-auto text-center space-y-8">
         {/* Success Animation */}
         <div className="relative">
           <div className="w-32 h-32 mx-auto bg-gradient-to-r from-[#d4ae36] to-[#e6c04a] rounded-full flex items-center justify-center mb-6 animate-pulse">
@@ -112,11 +112,17 @@ export default function OnboardingSuccessPage() {
           </Button>
         </div>
 
-        {/* Auto-redirect notice */}
+        {/* Auto-scroll notice */}
         <p className="text-sm text-gray-500">
-          Redirecting to homepage in {countdown} seconds...
+          Showing pricing options below...
         </p>
+        </div>
       </div>
+
+      {/* Pricing Section */}
+      <section id="pricing-section" className="py-16">
+        <PricingSection />
+      </section>
     </div>
   );
 }

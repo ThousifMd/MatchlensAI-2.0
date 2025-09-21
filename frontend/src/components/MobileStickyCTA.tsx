@@ -14,13 +14,8 @@ export const MobileStickyCTA: React.FC<MobileStickyCTAProps> = ({
 }) => {
     const handleCTAClick = (e: React.MouseEvent) => {
         e.preventDefault();
-        const pricingSection = document.getElementById('pricing-section');
-        if (pricingSection) {
-            const elementRect = pricingSection.getBoundingClientRect();
-            const absoluteElementTop = elementRect.top + window.pageYOffset;
-            const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
-            window.scrollTo({ top: middle, behavior: 'smooth' });
-        }
+        // Redirect to onboarding instead of pricing
+        window.location.href = '/onboarding';
     };
 
     return (
